@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Clientes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        header {
+            position: relative;
+            /* permite centralizar o h1 de forma absoluta */
+            display: flex;
+            justify-content: space-between;
+            /* logo à esquerda, botão à direita */
+            align-items: center;
+            padding: 1px;
+            background-color: #007BFF;
+            border-bottom: 1px solid #fff;
+            color: #fff;
+        }
+
+        /* Centralização absoluta do título */
+        header h1 {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            /* centraliza exatamente no meio horizontal */
+            margin: 0;
+            font-size: 1.6rem;
+            white-space: nowrap;
+            /* evita quebra de linha (opcional) */
+        }
+
+
+
+        .logo {
+            max-height: 90px;
+        }
+
+        .search-bar {
+            margin: 20px;
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+            cursor: pointer;
+        }
+
+        /*===================== botão voltar ===================*/
+
+        .btn-voltar {
+            background: #ffffff;
+            color: #007BFF;
+            border: 2px solid #007BFF;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-voltar:hover {
+            background: #007BFF;
+            color: #fff;
+        }
+    </style>
+
+
+</head>
+
+<body>
+
+
+    <header>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="/static/imagens/logo2.png" alt="Logo" class="logo">
+        </div>
+        <h1>Editar Cliente</h1>
+
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <button class="btn-voltar" onclick="window.location.href='/homepage'">← Voltar</button>
+        </div>
+
+    </header>
+
+
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Buscar por Proponente ou CPF..." onkeyup="buscarCliente()">
+    </div>
+
+    <table id="clientesTable">
+        <thead>
+            <tr>
+                <th>Proponente</th>
+                <th>CPF</th>
+                <th>CCA</th>
+                <th>Nº Contrato</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Dados serão inseridos via JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        function formatCPF(cpf) {
+            if (!cpf) return '';
+            cpf = cpf.replace(/\D/g, '');
+            return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        }
+
+        function formatNumContrato(NUM_CONTRATO) {
+            if (!NUM_CONTRATO) return '';
+            NUM_CONTRATO = NUM_CONTRATO.replace(/\D/g, '');
+            return NUM_CONTRATO.replace(/(\d{1})(\d{4})(\d{7})(\d{1})/, '$1.$2.$3-$4');
+        }
+
+        function formatCCA(CCA) {
+            if (!CCA) return '';
+            CCA = CCA.replace(/\D/g, '');
+            return CCA.replace(/(\d{4})(\d{1})/, '$1-$2');
+        }
+
+
+        async function carregarClientes() {
+            const response = await fetch('/api/clientes');
+            const clientes = await response.json();
+            exibirClientes(clientes);
+        }
+
+        function exibirClientes(clientes) {
+            const tbody = document.querySelector('#clientesTable tbody');
+            tbody.innerHTML = '';
+            clientes.forEach(cliente => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${cliente.proponente}</td>
+                    <td>${formatCPF(cliente.cpf)}</td>
+                    <td>${formatCCA(cliente.cca)}</td>
+                    <td>${formatNumContrato(cliente.numContrato)}</td>
+                `;
+                tr.onclick = () => {
+                    window.location.href = `/buscar_cliente/edit/${cliente.CPF}`;
+                };
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function buscarCliente() {
+            const termo = document.getElementById('searchInput').value.toLowerCase();
+            const response = await fetch('/api/clientes');
+            const clientes = await response.json();
+            const filtrados = clientes.filter(c =>
+                c.PROPONENTE.toLowerCase().includes(termo) || c.CPF.includes(termo)
+            );
+            exibirClientes(filtrados);
+        }
+
+        carregarClientes();
+    </script>
+</body>
+
+</html>

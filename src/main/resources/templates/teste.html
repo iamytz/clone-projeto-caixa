@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Cadastro de Cliente</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    .form-container {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 800px;
+      margin: 30px auto;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+
+    input[type="submit"],
+    button {
+      background-color: #3498db;
+      color: white;
+      padding: 12px 24px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="form-container">
+    <h2>Cadastro de Cliente</h2>
+    <form action="/confirmar_cliente" method="post">
+      <label for="data_entrada">Data de Entrada:</label>
+      <input id="data_entrada" name="data_entrada" required="" type="date" />
+      <label for="proponente">Proponente/Nome:</label>
+      <input id="proponente" name="proponente" required="" type="text" />
+      <label for="cpf">CPF:</label>
+      <input id="cpf" name="cpf" required="" title="Digite 11 números" type="text" value="{{ cliente.cpf }}" />
+
+      <label for="cca">CCA:</label>
+      <input id="cca" name="cca" type="text" />
+      <label for="contrato">N° Contrato:</label>
+      <input id="contrato" name="contrato" required="" title="Digite 13 números" type="text"
+        value="{{ cliente.contrato | formatar_contrato }}" />
+      <label for="valor_financiado">Valor Financiado:</label>
+      <input id="valor_financiado" name="valor_financiado" oninput="formatarMoeda(this)" required type="text" />
+
+      <script>
+        function formatarMoeda(campo) {
+          // Remove tudo que não for número
+          let valor = campo.value.replace(/\D/g, "");
+          // Converte para número e divide por 100 para ter centavos
+          valor = (valor / 100).toFixed(2);
+          // Substitui ponto por vírgula para decimais
+          valor = valor.replace(".", ",");
+          // Adiciona pontos para milhares
+          valor = valor.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+          // Atualiza o campo
+          campo.value = valor;
+        }
+      </script>
+
+      <label for="NumContaVendedor">N° Conta Vendedor:</label>
+      <input id="NumContaVendedor" name="NumContaVendedor" required="" type="text" />
+
+
+      </select>
+      <label for="modalidade">Modalidade:</label>
+      <select id="modalidade" name="modalidade">
+        <option value="SBPE - NOVO">SBPE - NOVO</option>
+        <option value="CCSBPE - NOVO">CCSBPE - NOVO</option>
+        <option value="SBPE - USADO">SBPE - USADO</option>
+        <option value="SBPE - LOTE">SBPE - LOTE</option>
+        <option value="SBPE - TERRENO CONSTRUÇÃO">SBPE - TERRENO CONSTRUÇÃO</option>
+        <option value="SBPE - EMPREENDIMENTO">SBPE - EMPREENDIMENTO</option>
+        <option value="SBPE - COMERCIAL USADO">SBPE - COMERCIAL USADO</option>
+        <option value="SBPE - CONSTRUÇÃO">SBPE - CONSTRUÇÃO</option>
+        <option value="MCMV - NOVO">MCMV - NOVO</option>
+        <option value="MCMV - USADO">MCMV - USADO</option>
+        <option value="MCMV - CONSTRUÇÃO">MCMV - CONSTRUÇÃO</option>
+        <option value="MCMV - NOVO C.MEDIA">MCMV - NOVO C.MEDIA</option>
+        <option value="MCMV - NOVO C. MEDIA">MCMV - NOVO C. MEDIA</option>
+        <option value="MCMV - FS">MCMV - FS</option>
+        <option value="MCMV - TERRENO E CONSTRUÇÃO">MCMV - TERRENO E CONSTRUÇÃO</option>
+        <option value="MCMV - empreendimento vila rio do ouro">MCMV - empreendimento vila rio do ouro</option>
+        <option value="PMCMV - Imóvel Usado Individual - Classe Média">PMCMV - Imóvel Usado Individual - Classe Média
+        </option>
+        <option value="NPMCMV - FS">NPMCMV - FS</option>
+        <option value="FGTS - EMPREENDIMENTO">FGTS - EMPREENDIMENTO</option>
+        <option value="CIP">CIP</option>
+        <option value="CCSBPE - CONSTRUÇÃO">CCSBPE - CONSTRUÇÃO</option>
+      </select>
+      <label for="reciprocidade">Reciprocidade:</label>
+      <input id="reciprocidade" name="reciprocidade" type="text" />
+      <label for="interveniente_quitante">Interveniente Quitante:</label>
+      <select id="interveniente_quitante" name="interveniente_quitante">
+        <option value="SIM">SIM</option>
+        <option value="NÃO">NÃO</option>
+      </select>
+      <label for="data_dev_garantia">Data Devolução Garantia:</label>
+      <input id="data_dev_garantia" name="data_dev_garantia" type="date" />
+      <label for="STATUS">Status do Contrato:</label>
+      <select id="STATUS" name="STATUS">
+        <option value="assinado">Assinado</option>
+        <option value="negociado">Negociado</option>
+        <option value="Em Negociação">Em Negociação</option>
+      </select>
+      <label for="observacoes">Observações:</label>
+      <textarea id="observacoes" name="observacoes" rows="3"></textarea>
+      <label for="nome_vendedor">Nome Vendedor:</label>
+      <select id="nome_vendedor" name="nome_vendedor" onchange="atualizarCPF()">
+        <option value="">Selecione</option>
+        <option value="1">ROMAO SILVEIRA EMPREENDIMENTOS IMOBILIARIOS</option>
+        <option value="2">KEVENN LEANDRO TEODORO SIQUEIRA DAS CHAGAS</option>
+        <option value="3">MARIA EDUARDA MARQUES MACIEL DA SILVA</option>
+        <option value="4">LUIZ DE MORAES</option>
+        <option value="5">GERSON CRISPIM DA COSTA</option>
+        <option value="6">F. S. E. C. ENGENHARIA LTDA</option>
+        <option value="7">ANDREIA DE MATOS CASTRO SANTOS</option>
+        <option value="8">JOSE CLAUDIO PINTO</option>
+        <option value="9">ANA PAULA DE SOUZA</option>
+        <option value="10">JOSE WILSON TORINO</option>
+        <option value="11">VITORIA DA SILVA DE OLIVEIRA</option>
+        <option value="12">FLAVIO RODRIGUES ARTESIANOS LTDA</option>
+        <option value="13">JOSE SANTOS DA CONCEICAO</option>
+        <option value="14">RUBENS APARECIDO SANCHES</option>
+        <option value="15">LEONARDO SAMPAIO LIMA CURVELLO</option>
+        <option value="16">MARCELO DA ROCHA MARCONDES</option>
+        <option value="17">JOSE ALEXANDRE DO PRADO</option>
+        <option value="18">THIAGO VIDAL</option>
+        <option value="19">VANILZA SIMONE DE SOUZA RAMOS</option>
+      </select>
+      <label for="cpf_vendedor">CPF/CNPJ:</label>
+      <input name="cpf_vendedor" id="cpf_vendedor" type="text" readonly />
+      <input type="submit" value="Confirmar Dados" />
+    </form>
+    <form action="/homepage" method="post">
+      <input type="submit" value="Voltar e Cancelar" />
+    </form>
+
+
+  </div>
+
+
+
+
+
+  <script>
+    const cpfs = {
+      "1": "42.445.553/0001-06",
+      "2": "411.224.878-43",
+      "3": "516.875.518-87",
+      "4": "618.155.518-87",
+      "5": "048.502.918-99",
+      "6": "53.579.978/0001-93",
+      "7": "284.350.978-54",
+      "8": "161.630.268-29",
+      "9": "254.951.268-58",
+      "10": "516.245.368-40",
+      "11": "516.245.368-40",
+      "12": "04.653.798/0001-21",
+      "13": "520.545.545-91",
+      "14": "947.247.848-49",
+      "15": "318.050.228-22",
+      "16": "132.565.848-02",
+      "17": "326.972.618-00",
+      "18": "326.972.618-00",
+      "19": "105.298.338-32"
+    };
+
+
+    function atualizarCPF() {
+      const vendedorSelecionado = document.getElementById("nome_vendedor").value;
+      const campoCPF = document.getElementById("cpf_vendedor");
+      campoCPF.value = cpfs[vendedorSelecionado] || "";
+    }
+
+    function formatarMoeda(campo) {
+      let valor = campo.value.replace(/\D/g, "");
+      valor = (parseFloat(valor) / 100).toFixed(2);
+      campo.value = "R$ " + valor.replace(".", ",");
+    }
+
+    // Formatação do campo contrato
+    const campoContrato = document.getElementById('contrato');
+    campoContrato.addEventListener('input', function (e) {
+      let valor = e.target.value.replace(/\D/g, '');
+      if (valor.length > 13) valor = valor.slice(0, 13);
+
+      let formatado = '';
+      if (valor.length > 0) formatado += valor[0];
+      if (valor.length > 1) formatado += '.' + valor.slice(1, 5);
+      if (valor.length > 5) formatado += '.' + valor.slice(5, 12);
+      if (valor.length > 12) formatado += '-' + valor.slice(12);
+
+      e.target.value = formatado;
+    });
+
+    // Validação antes de enviar
+    document.querySelector('form').addEventListener('submit', function (e) {
+      const valor = campoContrato.value.replace(/\D/g, '');
+      if (valor.length !== 13) {
+        alert('O número do contrato deve conter exatamente 13 dígitos.');
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+
+</html>

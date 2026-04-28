@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Página Inicial</title>
+  <style>
+    body {
+      background-image: url('/static/imagens/fundo.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background-color: rgba(46, 46, 46, 0.85);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      font-size: 28px;
+      color: #e2e2e2;
+    }
+
+    .botoes {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .botao {
+      background-color: #4CAF50;
+      color: white;
+      padding: 16px;
+      text-align: center;
+      text-decoration: none;
+      font-size: 18px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s, background-color 0.3s;
+    }
+
+    .botao:hover {
+      background-color: #45a049;
+      transform: scale(1.05);
+    }
+
+    .imagem-header img {
+      width: 150px;
+      /* deixe menor — ajuste como quiser */
+      position: absolute;
+      top: 10px;
+      /* distância do topo */
+      right: 10px;
+      /* distância da esquerda */
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="imagem-header">
+    <img src="static/imagens/fundo_hab.png" alt="Logo" class="logo-overlay">
+  </div>
+
+  <div class="container">
+    <h1>Bem-vindo a Página Inicial</h1>
+    <div class="botoes">
+      <a class="botao" href="/homepage" target="_self">Habitação</a>
+      <a class="botao" href="/editor_pdf" target="_self">Anexar PDF's</a>
+      <a class="botao" href="/esteira_habitacao" target="_self">Esteira Habitação</a>
+    </div>
+  </div>
+  </div>
+</body>
+
+</html>

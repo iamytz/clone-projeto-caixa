@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Cliente</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #007BFF;
+            color: white;
+            padding: 5px 10px;
+        }
+
+        header img {
+            height: 90px;
+        }
+
+        header h1 {
+            flex: 1;
+            text-align: center;
+            margin: 0;
+        }
+
+        header button {
+            background-color: #fff;
+            color: #007BFF;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        form {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        form label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        form input,
+        form textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .btn-submit {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 4px;
+        }
+
+        form select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        /*=======================    2 form visual ============*/
+
+
+        /* Ajuste do tamanho do modal */
+        #modalConfirmacao>div {
+            background: #fff;
+            width: 600px;
+            /* <-- Aumente ou diminua aqui para ajustar o tamanho do formulário visual */
+            margin: 100px auto;
+            padding: 40px;
+            border-radius: 8px;
+        }
+
+        /* Lista de dados no modal */
+        #dadosFormulario ul {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Botão Confirmar */
+        #btnConfirmar {
+            background: #007BFF;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            margin-right: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /* Botão Cancelar */
+        #btnCancelar {
+            background: #FF0000;
+            /* Vermelho */
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            /* Bordas arredondadas */
+            cursor: pointer;
+        }
+
+
+
+        label[for="status"],
+        #status {
+            display: block;
+            /* mantém igual aos outros campos */
+            margin-left: 0;
+            /* remove deslocamento */
+        }
+
+        #status {
+            width: 102%;
+            /* igual aos outros inputs */
+        }
+
+        label[for="modalidade"],
+        #modalidade {
+            display: block;
+            /* mantém igual aos outros campos */
+            margin-left: 0;
+            /* remove deslocamento */
+        }
+
+        #modalidade {
+            width: 102%;
+            /* igual aos outros inputs */
+        }
+
+
+
+        .linha {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            white-space: nowrap;
+            /* impede quebra de linha */
+        }
+
+        .opcao {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            /* texto ↔ checkbox */
+            cursor: pointer;
+            /* melhor UX */
+        }
+
+        .titulo {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <img src="/static/imagens/logo2.png" alt="Logo">
+        <h1>Cadastro de Cliente</h1>
+        <button onclick="window.history.back()">Voltar</button>
+    </header>
+
+    <form id="meuFormulario" action="/salvar" method="POST">
+        <label>Data Entrada:</label>
+        <input type="datetime-local" name="DATA_ENTRADA" required>
+
+        <label>Proponente:</label>
+        <input type="text" name="PROPONENTE" required>
+
+        <label>CPF:</label>
+        <input type="text" id="cpf" name="CPF" maxlength="14" required>
+
+        <label>CCA:</label>
+        <input type="text" id="cca" name="CCA" maxlength="7" required>
+
+        <label>Número do Contrato:</label>
+        <input type="text" id="numContrato" name="NUM_CONTRATO" maxlength="16" inputmode="numeric" autocomplete="off"
+            spellcheck="false">
+
+
+        <label>Valor Financiado:</label>
+        <input type="text" id="valorFinanciado" name="VALOR_FINANCIADO" required>
+
+        <label>Status:</label>
+        <select id="status" name="STATUS">
+            <option value="">Selecione...</option>
+            <option value="assinado">Assinado</option>
+            <option value="negociado">Negociado</option>
+            <option value="em_negociacao">Em Negociação</option>
+        </select>
+
+        <label>Modalidade:</label>
+        <select id="modalidade" name="MODALIDADE">
+            <option value="">Selecione...</option>
+            <option value="SBPE - NOVO">SBPE - NOVO</option>
+            <option value="CCSBPE - NOVO">CCSBPE - NOVO</option>
+            <option value="SBPE - USADO">SBPE - USADO</option>
+            <option value="SBPE - LOTE">SBPE - LOTE</option>
+            <option value="SBPE - TERRENO CONSTRUÇÃO">SBPE - TERRENO CONSTRUÇÃO</option>
+            <option value="SBPE - EMPREENDIMENTO">SBPE - EMPREENDIMENTO</option>
+            <option value="SBPE - COMERCIAL USADO">SBPE - COMERCIAL USADO</option>
+            <option value="SBPE - CONSTRUÇÃO">SBPE - CONSTRUÇÃO</option>
+            <option value="MCMV - NOVO">MCMV - NOVO</option>
+            <option value="MCMV - USADO">MCMV - USADO</option>
+            <option value="MCMV - CONSTRUÇÃO">MCMV - CONSTRUÇÃO</option>
+            <option value="MCMV - NOVO C.MEDIA">MCMV - NOVO C.MEDIA</option>
+            <option value="MCMV - NOVO C. MEDIA">MCMV - NOVO C. MEDIA</option>
+            <option value="MCMV - FS">MCMV - FS</option>
+            <option value="MCMV - TERRENO E CONSTRUÇÃO">MCMV - TERRENO E CONSTRUÇÃO</option>
+            <option value="MCMV - empreendimento vila rio do ouro">MCMV - empreendimento vila rio do ouro</option>
+            <option value="PMCMV - Imóvel Usado Individual - Classe Média">PMCMV - Imóvel Usado Individual - Classe
+                Média</option>
+            <option value="NPMCMV - FS">NPMCMV - FS</option>
+            <option value="FGTS - EMPREENDIMENTO">FGTS - EMPREENDIMENTO</option>
+            <option value="CIP">CIP</option>
+            <option value="CCSBPE - CONSTRUÇÃO">CCSBPE - CONSTRUÇÃO</option>
+        </select>
+
+        <label>Reciprocidade:</label>
+        <input type="text" name="RECIPROCIDADE">
+
+        <label>Interveniente Quitante:</label>
+        <input type="text" name="INTERVENIENTE_QUITANTE">
+
+        <label>Data Devolução Garantia:</label>
+        <input type="datetime-local" name="DATA_DEV_GARATIA">
+
+        <label>Observações:</label>
+        <textarea name="OBS"></textarea>
+
+        <label>Nome Vendedor:</label>
+        <input type="text" name="NOME_VENDEDOR">
+
+
+        <div class="linha">
+            <label class="opcao">
+                <span class="titulo">Conta Caixa</span>
+                <input type="checkbox" class="exclusivo" id="caixa" name="CONTA_VENDEDOR" value="Conta Caixa">
+            </label>
+
+            <label class="opcao">
+                <span class="titulo">Outros Bancos</span>
+                <input type="checkbox" class="exclusivo" id="outros" name="CONTA_VENDEDOR" value="Outras Bancos">
+            </label>
+        </div>
+
+
+
+
+
+
+        <label>Vendedor CPF/CNPJ:</label>
+        <input type="text" name="VENDEDOR_CPF_CNPJ">
+
+        <button type="submit" class="btn-submit">Salvar Cadastro</button>
+    </form>
+
+    <div id="modalConfirmacao"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
+        <div style="background:#fff; width:400px; margin:100px auto; padding:20px; border-radius:8px;">
+            <h2>Confirme os Dados</h2>
+            <div id="dadosFormulario"></div>
+            <button id="btnConfirmar"
+                style="background:#007BFF; color:#fff; padding:10px; border:none; margin-right:10px;">Confirmar</button>
+            <button id="btnCancelar" style="background:#ccc; padding:10px; border:none;">Cancelar</button>
+        </div>
+    </div>
+
+
+
+    <script>
+        // Seletor de todos os checkboxes exclusivos
+        const caixas = document.querySelectorAll('.exclusivo');
+
+        caixas.forEach(c => {
+            c.addEventListener('change', () => {
+                if (c.checked) {
+                    // Desmarca os outros checkboxes
+                    caixas.forEach(o => {
+                        if (o !== c) o.checked = false;
+                    });
+                }
+            });
+        });
+    </script>
+
+
+    <script>
+
+
+
+        const form = document.getElementById('meuFormulario');
+        const modal = document.getElementById('modalConfirmacao');
+        const dadosDiv = document.getElementById('dadosFormulario');
+        const btnConfirmar = document.getElementById('btnConfirmar');
+        const btnCancelar = document.getElementById('btnCancelar');
+
+        /* Máscara CPF */
+        const cpfInput = document.getElementById('cpf');
+        cpfInput.addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, ''); // Remove tudo que não é número
+            if (value.length > 11) value = value.slice(0, 11); // Limita a 11 dígitos
+
+            // Aplica a máscara de forma incremental
+            if (value.length <= 3) {
+                e.target.value = value;
+            } else if (value.length <= 6) {
+                e.target.value = value.replace(/(\d{3})(\d+)/, '$1.$2');
+            } else if (value.length <= 9) {
+                e.target.value = value.replace(/(\d{3})(\d{3})(\d+)/, '$1.$2.$3');
+            } else {
+                e.target.value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+            }
+        });
+
+
+
+        /* Máscara CCA */
+        const ccaInput = document.getElementById('cca');
+        ccaInput.addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 5) value = value.slice(0, 5);
+            if (value.length > 4) value = value.replace(/(\d{4})(\d)/, '$1-$2');
+            e.target.value = value;
+        });
+
+
+
+
+        /* Máscara: x.xxxx.xxxxxxx-x (13 dígitos) com preservação correta do cursor */
+        const contratoInput = document.getElementById('numContrato');
+
+        function apenasDigitos(str) {
+            return (str || '').replace(/\D/g, '');
+        }
+
+        function limitar13(str) {
+            return str.slice(0, 13);
+        }
+
+        function mascararContrato(digitos) {
+            // fatias: 1 | 4 | 7 | 1
+            const p1 = digitos.slice(0, 1);
+            const p2 = digitos.slice(1, 5);
+            const p3 = digitos.slice(5, 12);
+            const p4 = digitos.slice(12, 13);
+
+            let out = p1;
+            if (p2) out += '.' + p2;
+            if (p3) out += '.' + p3;
+            if (p4) out += '-' + p4;
+            return out;
+        }
+
+        /* Conta quantos dígitos existem à ESQUERDA de uma posição de cursor dentro de um texto mascarado */
+        function contarDigitosAtePosicao(masked, caretPos) {
+            let count = 0;
+            for (let i = 0; i < Math.min(caretPos, masked.length); i++) {
+                if (/\d/.test(masked[i])) count++;
+            }
+            return count;
+        }
+
+        /* Dado um texto mascarado e um índice "quantos dígitos devo passar",
+           retorna a posição de cursor que fica imediatamente após esse N-ésimo dígito */
+        function posicaoAposNDigitos(masked, n) {
+            if (n <= 0) return 0;
+            let count = 0;
+            for (let i = 0; i < masked.length; i++) {
+                if (/\d/.test(masked[i])) {
+                    count++;
+                    if (count === n) return i + 1; // logo após o dígito N
+                }
+            }
+            return masked.length; // se n > total de dígitos, vai para o fim
+        }
+
+        function formatarComCursorPreservado(e) {
+            const input = e.target;
+
+            // Valor e posição do cursor ANTES de reformatar
+            const valorAntigo = input.value;
+            const caretAntigo = input.selectionStart ?? valorAntigo.length;
+
+            // Quantos dígitos existiam à esquerda do cursor antigo
+            const qtdDigitosEsquerda = contarDigitosAtePosicao(valorAntigo, caretAntigo);
+
+            // Reconstroi a partir APENAS de dígitos
+            const digitos = limitar13(apenasDigitos(valorAntigo));
+            const valorNovo = mascararContrato(digitos);
+
+            // Seta valor novo
+            if (input.value !== valorNovo) input.value = valorNovo;
+
+            // Reposiciona cursor no ponto após o mesmo número de dígitos
+            const caretNovo = posicaoAposNDigitos(valorNovo, qtdDigitosEsquerda);
+
+            try {
+                input.setSelectionRange(caretNovo, caretNovo);
+            } catch {
+                // alguns navegadores móveis podem ignorar durante o evento
+            }
+        }
+
+        contratoInput.addEventListener('input', formatarComCursorPreservado);
+
+        // Garante consistência ao colar e ao sair do campo
+        contratoInput.addEventListener('paste', () => {
+            setTimeout(() => {
+                formatarComCursorPreservado({ target: contratoInput });
+            }, 0);
+        });
+        contratoInput.addEventListener('blur', () => {
+            formatarComCursorPreservado({ target: contratoInput });
+        });
+
+
+
+
+
+
+
+
+        // Máscara para Valor Financiado (formato moeda)
+        const valorInput = document.getElementById('valorFinanciado');
+        valorInput.addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, ''); // Remove tudo que não é número
+
+            if (value.length === 0) {
+                e.target.value = '';
+                return;
+            }
+
+            // Se tiver menos de 3 dígitos, completa com zeros à esquerda
+            if (value.length < 3) {
+                value = value.padStart(3, '0');
+            }
+
+            // Separa parte inteira e centavos
+            let inteiro = value.slice(0, -2);
+            let centavos = value.slice(-2);
+
+            // Remove zeros à esquerda da parte inteira (mas mantém pelo menos 1 dígito)
+            inteiro = inteiro.replace(/^0+(?!$)/, '');
+
+            // Adiciona separador de milhares
+            inteiro = inteiro.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+            let formatado = inteiro + ',' + centavos;
+
+            // ✅ Limita a 22 caracteres no valor formatado
+            if (formatado.length > 22) {
+                formatado = formatado.slice(0, 22);
+            }
+
+            e.target.value = formatado;
+        });
+
+
+
+
+        cpfInput.addEventListener('input', function () {
+            let cpfVal = cpfInput.value.replace(/\D/g, '');
+            if (cpfVal.length === 11) {
+                cpfInput.setCustomValidity(''); // Remove erro quando válido
+            }
+        });
+
+        ccaInput.addEventListener('input', function () {
+            let ccaVal = ccaInput.value.replace(/\D/g, '');
+            if (ccaVal.length === 5) {
+                ccaInput.setCustomValidity('');
+            }
+        });
+
+        contratoInput.addEventListener('input', function () {
+            let contratoVal = contratoInput.value.replace(/\D/g, '');
+            if (contratoVal.length === 13) {
+                contratoInput.setCustomValidity('');
+            }
+        });
+
+
+
+
+        /* Validação com mensagens nativas */
+        form.addEventListener('submit', function (e) {
+            let cpfVal = cpfInput.value.replace(/\D/g, '');
+            let ccaVal = ccaInput.value.replace(/\D/g, '');
+            let contratoVal = contratoInput.value.replace(/\D/g, '');
+            let valorVal = valorInput.value.replace(/\D/g, ''); // Remove pontos e vírgula
+            valorInput.value = valorVal; // Substitui pelo valor puro (ex.: 123456)
+
+            cpfInput.setCustomValidity('');
+            ccaInput.setCustomValidity('');
+            contratoInput.setCustomValidity('')
+
+            if (cpfVal.length !== 11) {
+                cpfInput.setCustomValidity('CPF deve conter 11 dígitos.');
+            }
+
+            if (ccaVal.length !== 5) ccaInput.setCustomValidity('CCA deve conter 6 dígitos.');
+            if (contratoVal.length !== 13) contratoInput.setCustomValidity('Número do Contrato deve conter 13 dígitos.');
+
+            if (!form.checkValidity()) {
+                e.preventDefault();
+                form.reportValidity();
+                return; // Bloqueia envio e modal
+            }
+
+            // Remove pontuação antes de enviar
+            cpfInput.value = cpfVal;
+            ccaInput.value = ccaVal;
+            contratoInput.value = contratoVal;
+
+            // Exibir modal para confirmação
+            e.preventDefault();
+            const formData = new FormData(form);
+            let htmlDados = '<ul>';
+            formData.forEach((valor, chave) => {
+                let labelCampo = chave.replace(/\_/g, " ").toUpperCase();
+                let v = valor.trim();
+                let valorFormatado = v;
+
+                // 📌 FORMATAR DATA (datetime-local)
+                if (v.includes("T")) {
+                    let partes = v.split("T")[0].split("-");
+                    valorFormatado = `${partes[2]}/${partes[1]}/${partes[0]}`;
+                }
+
+                // 📌 CPF (11 dígitos -> 000.000.000-00)
+                if (chave === "CPF") {
+                    valorFormatado = v
+                        .replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, "$1.$2.$3-$4");
+                }
+
+                // 📌 CCA (5 dígitos -> 0000-0)
+                if (chave === "CCA") {
+                    valorFormatado = v
+                        .replace(/^(\d{4})(\d{1})$/, "$1-$2");
+                }
+
+                // 📌 NÚMERO DO CONTRATO (13 dígitos -> x.xxxx.xxxxxxx-x)
+                if (chave === "NUM_CONTRATO") {
+                    valorFormatado = v
+                        .replace(/^(\d{1})(\d{4})(\d{7})(\d{1})$/, "$1.$2.$3-$4");
+                }
+
+                // 📌 VALOR FINANCIADO (moeda -> 1.234.567,89)
+                if (chave === "VALOR_FINANCIADO") {
+                    let n = Number(v) / 100;
+                    valorFormatado = n.toLocaleString("pt-BR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                }
+
+                // 📌 CHECKBOX (Conta Vendedor)
+                if (chave === "CONTA_VENDEDOR") {
+                    if (v === "Conta Caixa") valorFormatado = "CONTA CAIXA";
+                    if (v === "Outros Bancos") valorFormatado = "OUTROS BANCOS";
+                }
+
+                htmlDados += `
+        <li>
+            <strong>${labelCampo}:</strong> 
+            <span style="font-weight:bold;">${valorFormatado}</span>
+        </li>
+    `;
+            });
+            htmlDados += '</ul>';
+            dadosDiv.innerHTML = htmlDados;
+            modal.style.display = 'block';
+        });
+
+        btnConfirmar.addEventListener('click', () => {
+            modal.style.display = 'none';
+            form.submit();
+        });
+
+        btnCancelar.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+
+    </script>
+
+
+
+
+</body>
+
+</html>

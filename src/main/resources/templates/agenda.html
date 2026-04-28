@@ -1,0 +1,795 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <title>Agenda • Central Habitação CAIXA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --text: #0f172a;
+      --muted: #475569;
+      --card: #ffffff;
+      --primary-2: #007BFF;
+      --primary: #1a17df;
+      --ring: rgba(11, 0, 211, 0.35);
+      --shadow: 0 10px 20px rgba(2, 8, 23, .08), 0 2px 6px rgba(2, 8, 23, .06);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b1220;
+        --text: #e5e7eb;
+        --muted: #94a3b8;
+        --card: #0f172a;
+        --shadow: 0 10px 20px rgba(0, 0, 0, .4), 0 2px 6px rgba(0, 0, 0, .35);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 500 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: #fff;
+      padding: 32px 20px 40px;
+    }
+
+    .hero .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      font-size: clamp(1.6rem, 2.5vw + 1rem, 2.25rem);
+    }
+
+    .hero p {
+      margin: 8px 0 0;
+      color: #eef2ff;
+      max-width: 700px;
+      font-size: .95rem;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 24px auto 40px;
+      padding: 0 20px;
+    }
+
+    .agenda-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .agenda-header-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .agenda-header-sub {
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .agenda-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .agenda-nav button {
+      border-radius: 999px;
+      border: 0;
+      padding: 6px 10px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .agenda-grid {
+      background: var(--card);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .agenda-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-bottom: 6px;
+      font-size: .8rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .agenda-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+
+    .day-card {
+      border-radius: 14px;
+      background: var(--bg);
+      border: 1px solid rgba(148, 163, 184, .35);
+      padding: 6px 8px 8px;
+      min-height: 68px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: background .15s ease, transform .1s ease, box-shadow .15s ease;
+      position: relative;
+    }
+
+    .day-card:hover {
+      background: #e0edff;
+      box-shadow: 0 10px 18px rgba(15, 23, 42, .16);
+      transform: translateY(-1px);
+    }
+
+    .day-card--outside {
+      opacity: .4;
+      cursor: default;
+    }
+
+    .day-number {
+      font-size: .85rem;
+      font-weight: 700;
+    }
+
+    .day-events-badge {
+      font-size: .7rem;
+      color: #f97316;
+      background: rgba(249, 115, 22, .1);
+      border-radius: 999px;
+      padding: 2px 6px;
+      align-self: flex-start;
+      margin-top: 4px;
+    }
+
+    .day-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+      position: absolute;
+      right: 6px;
+      bottom: 6px;
+    }
+
+    .legenda-agenda {
+      margin-top: 10px;
+      font-size: .8rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .legenda-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legenda-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+
+    /* Overlay lateral com blur */
+    .day-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: none;
+    }
+
+    .day-overlay--open {
+      display: block;
+    }
+
+    .day-overlay__backdrop {
+      position: absolute;
+      inset: 0;
+      backdrop-filter: blur(6px);
+      background: rgba(15, 23, 42, .35);
+    }
+
+    .day-overlay__panel {
+      position: absolute;
+      top: 32px;
+      right: 20px;
+      bottom: 32px;
+      width: min(420px, 92vw);
+      background: var(--card);
+      border-radius: 18px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, .5);
+      padding: 16px 18px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .day-overlay__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .day-overlay__title {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .day-overlay__subtitle {
+      font-size: .8rem;
+      color: var(--muted);
+    }
+
+    .day-overlay__close {
+      border-radius: 999px;
+      border: 0;
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .day-overlay__list {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+      border-radius: 10px;
+      background: rgba(148, 163, 184, .08);
+      padding: 6px;
+    }
+
+    .agenda-item {
+      border-radius: 10px;
+      background: var(--card);
+      box-shadow: 0 2px 6px rgba(15, 23, 42, .08);
+      padding: 8px 10px;
+      font-size: .85rem;
+      margin-bottom: 6px;
+      border-left: 3px solid #3b82f6;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px;
+    }
+
+    .agenda-item-header {
+      font-weight: 600;
+    }
+
+    .agenda-item-meta {
+      font-size: .78rem;
+      color: var(--muted);
+    }
+
+    .agenda-item-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .agenda-item-actions button {
+      border: 0;
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: .75rem;
+      cursor: pointer;
+    }
+
+    .btn-mini-edit {
+      background: #eff6ff;
+      color: #007BFF;
+    }
+
+    .btn-mini-delete {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .day-overlay__form {
+      margin-top: 4px;
+      border-top: 1px solid rgba(148, 163, 184, .4);
+      padding-top: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: .85rem;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .form-row label {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .form-row input,
+    .form-row select,
+    .form-row textarea {
+      border-radius: 8px;
+      border: 1px solid rgba(148, 163, 184, .7);
+      padding: 5px 7px;
+      font: inherit;
+      background: transparent;
+      color: inherit;
+    }
+
+    .form-row textarea {
+      min-height: 48px;
+      resize: vertical;
+    }
+
+    .btn-salvar {
+      align-self: flex-end;
+      border-radius: 999px;
+      border: 0;
+      padding: 6px 14px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: #fff;
+      cursor: pointer;
+      font-size: .85rem;
+      font-weight: 600;
+    }
+
+    .footer {
+      text-align: left;
+      color: var(--muted);
+      margin-top: 12px;
+      font-size: .8rem;
+    }
+
+    @media (max-width: 700px) {
+      .day-overlay__panel {
+        top: auto;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        width: 100%;
+        border-radius: 18px 18px 0 0;
+      }
+    }
+
+
+    .btn-voltar {
+      background: #ffffff;
+      color: #007BFF;
+      border: 2px solid #007BFF;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-voltar:hover {
+      background: #fff;
+      color: #007BFF;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="hero">
+    <div class="container">
+      <h1>Agenda de Entrevistas e Contratos</h1>
+      <p>Visualize, crie e gerencie agendamentos de forma rápida e organizada.</p>
+    </div>
+
+    </div>
+    <div style="flex:1; display:flex; justify-content:flex-end;">
+      <button class="btn-voltar" onclick="window.location.href='/homepage'">← Voltar</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section aria-label="Agenda mensal">
+      <div class="agenda-header">
+        <div>
+          <div class="agenda-header-title" id="mesAnoLabel"></div>
+          <div class="agenda-header-sub">
+            Clique em um dia para ver, criar ou editar anotações.
+          </div>
+        </div>
+        <div class="agenda-nav">
+          <button type="button" id="btnPrevMes">&lt;</button>
+          <span id="mesResumo" style="font-size:.9rem;"></span>
+          <button type="button" id="btnProxMes">&gt;</button>
+        </div>
+      </div>
+
+      <div id="agenda-root" class="agenda-grid" data-ano="{{ ano }}" data-mes="{{ mes }}">
+        <div class="agenda-weekdays">
+          <div>Dom</div>
+          <div>Seg</div>
+          <div>Ter</div>
+          <div>Qua</div>
+          <div>Qui</div>
+          <div>Sex</div>
+          <div>Sáb</div>
+        </div>
+        <div class="agenda-days" id="agendaDays"></div>
+      </div>
+
+      <div class="legenda-agenda">
+        <div class="legenda-item">
+          <span class="legenda-dot"></span> Dia com compromisso
+        </div>
+      </div>
+
+      <p class="footer">
+        Dica: utilize sempre um horário e tipo (ENTREVISTA / CONTRATO) para facilitar sua consulta.
+      </p>
+    </section>
+  </main>
+
+  <!-- Overlay lateral -->
+  <div class="day-overlay" id="dayOverlay">
+    <div class="day-overlay__backdrop" id="dayOverlayBackdrop"></div>
+    <div class="day-overlay__panel">
+      <div class="day-overlay__header">
+        <div>
+          <div class="day-overlay__title" id="overlayTituloDia"></div>
+          <div class="day-overlay__subtitle" id="overlaySubtitulo"></div>
+        </div>
+        <button type="button" class="day-overlay__close" id="btnFecharOverlay">&times;</button>
+      </div>
+
+      <div class="day-overlay__list" id="listaAnotacoes">
+        <!-- itens via JS -->
+      </div>
+
+      <form class="day-overlay__form" id="formAgenda">
+        <input type="hidden" id="idAgenda">
+
+        <div class="form-row">
+          <label>
+            Horário
+            <input type="time" id="horarioAgenda">
+          </label>
+          <label>
+            Tipo
+            <select id="tipoAgenda">
+              <option value="ENTREVISTA">ENTREVISTA</option>
+              <option value="CONTRATO">CONTRATO</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="form-row">
+          <label>
+            Nome do cliente
+            <input type="text" id="nomeClienteAgenda" placeholder="Nome do cliente">
+          </label>
+        </div>
+
+        <div class="form-row">
+          <label>
+            CPF
+            <input type="text" id="cpfAgenda" placeholder="Apenas números">
+          </label>
+        </div>
+
+        <div class="form-row">
+          <label>
+            Observações
+            <textarea id="obsAgenda" placeholder="Detalhes da entrevista ou contrato"></textarea>
+          </label>
+        </div>
+
+        <button type="submit" class="btn-salvar">Salvar anotação</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const mesesNomes = [
+      "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+      "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+    ];
+
+    let anoAtual, mesAtual;
+    let eventosMesAtual = {};
+    let diaSelecionado = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const root = document.getElementById('agenda-root');
+      anoAtual = parseInt(root.dataset.ano, 10);
+      mesAtual = parseInt(root.dataset.mes, 10);
+
+      document.getElementById('btnPrevMes').addEventListener('click', () => mudarMes(-1));
+      document.getElementById('btnProxMes').addEventListener('click', () => mudarMes(+1));
+
+      document.getElementById('dayOverlayBackdrop').addEventListener('click', fecharOverlay);
+      document.getElementById('btnFecharOverlay').addEventListener('click', fecharOverlay);
+
+      document.getElementById('formAgenda').addEventListener('submit', onSubmitAgenda);
+
+      carregarMes(anoAtual, mesAtual);
+    });
+
+    function mudarMes(delta) {
+      mesAtual += delta;
+      if (mesAtual < 1) {
+        mesAtual = 12;
+        anoAtual -= 1;
+      } else if (mesAtual > 12) {
+        mesAtual = 1;
+        anoAtual += 1;
+      }
+      carregarMes(anoAtual, mesAtual);
+    }
+
+    async function carregarMes(ano, mes) {
+      atualizarCabecalhoMes(ano, mes);
+      eventosMesAtual = {};
+      diaSelecionado = null;
+
+      try {
+        const resp = await fetch(`/api/agenda/${ano}/${mes}`);
+        const dados = resp.ok ? await resp.json() : [];
+        for (const ev of dados) {
+          const dia = parseInt(ev.data.slice(-2), 10);
+          if (!eventosMesAtual[dia]) eventosMesAtual[dia] = [];
+          eventosMesAtual[dia].push(ev);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+      renderizarDias(ano, mes);
+    }
+
+    function atualizarCabecalhoMes(ano, mes) {
+      const label = document.getElementById('mesAnoLabel');
+      const resumo = document.getElementById('mesResumo');
+      const nomeMes = mesesNomes[mes - 1] || "";
+      label.textContent = `${nomeMes} de ${ano}`;
+      resumo.textContent = `${nomeMes}/${ano}`;
+    }
+
+    function renderizarDias(ano, mes) {
+      const container = document.getElementById('agendaDays');
+      container.innerHTML = "";
+
+      const dataInicio = new Date(ano, mes - 1, 1);
+      const primeiroDiaSemana = dataInicio.getDay(); // 0 domingo
+      const ultimoDia = new Date(ano, mes, 0).getDate();
+
+      // Dias vazios antes do 1
+      for (let i = 0; i < primeiroDiaSemana; i++) {
+        const div = document.createElement('div');
+        container.appendChild(div);
+      }
+
+      for (let dia = 1; dia <= ultimoDia; dia++) {
+        const card = document.createElement('div');
+        card.className = 'day-card';
+        card.setAttribute('data-dia', dia);
+        card.addEventListener('click', () => abrirDia(dia));
+
+        const numero = document.createElement('div');
+        numero.className = 'day-number';
+        numero.textContent = dia;
+
+        card.appendChild(numero);
+
+        const eventos = eventosMesAtual[dia] || [];
+        if (eventos.length > 0) {
+          const badge = document.createElement('div');
+          badge.className = 'day-events-badge';
+          badge.textContent = `${eventos.length} compromisso(s)`;
+          badge.title = eventos.map(e => `${e.horario || ""} ${e.tipo || ""} - ${e.nome_cliente || ""}`).join('\\n');
+          card.appendChild(badge);
+
+          const dot = document.createElement('span');
+          dot.className = 'day-dot';
+          card.appendChild(dot);
+        }
+
+        container.appendChild(card);
+      }
+    }
+
+    function abrirDia(dia) {
+      diaSelecionado = dia;
+      const dataStr = `${anoAtual}-${String(mesAtual).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
+
+      const titulo = document.getElementById('overlayTituloDia');
+      titulo.textContent = `Dia ${String(dia).padStart(2, '0')} de ${mesesNomes[mesAtual - 1]} de ${anoAtual}`;
+
+      const sub = document.getElementById('overlaySubtitulo');
+      sub.textContent = `Data: ${dataStr}`;
+
+      // Reset do form
+      document.getElementById('idAgenda').value = "";
+      document.getElementById('horarioAgenda').value = "";
+      document.getElementById('tipoAgenda').value = "ENTREVISTA";
+      document.getElementById('nomeClienteAgenda').value = "";
+      document.getElementById('cpfAgenda').value = "";
+      document.getElementById('obsAgenda').value = "";
+
+      const lista = document.getElementById('listaAnotacoes');
+      lista.innerHTML = "";
+
+      const eventos = eventosMesAtual[dia] || [];
+      if (eventos.length === 0) {
+        const vazio = document.createElement('div');
+        vazio.style.fontSize = '.85rem';
+        vazio.style.color = 'var(--muted)';
+        vazio.textContent = 'Nenhuma anotação para este dia.';
+        lista.appendChild(vazio);
+      } else {
+        for (const ev of eventos) {
+          const item = document.createElement('div');
+          item.className = 'agenda-item';
+
+          const col1 = document.createElement('div');
+          const header = document.createElement('div');
+          header.className = 'agenda-item-header';
+          header.textContent = `${ev.horario || '--:--'} • ${ev.tipo || ''}`;
+          const meta = document.createElement('div');
+          meta.className = 'agenda-item-meta';
+          meta.textContent = `${ev.nome_cliente || ''} - CPF: ${ev.cpf || ''}`;
+          const obs = document.createElement('div');
+          obs.style.marginTop = '4px';
+          obs.textContent = ev.obs || '';
+
+          col1.appendChild(header);
+          col1.appendChild(meta);
+          if (ev.obs) col1.appendChild(obs);
+
+          const col2 = document.createElement('div');
+          col2.className = 'agenda-item-actions';
+
+          const btnEdit = document.createElement('button');
+          btnEdit.type = 'button';
+          btnEdit.className = 'btn-mini-edit';
+          btnEdit.textContent = 'Editar';
+          btnEdit.addEventListener('click', () => preencherFormEdicao(ev));
+
+          const btnDel = document.createElement('button');
+          btnDel.type = 'button';
+          btnDel.className = 'btn-mini-delete';
+          btnDel.textContent = 'Excluir';
+          btnDel.addEventListener('click', () => excluirAnotacao(ev));
+
+          col2.appendChild(btnEdit);
+          col2.appendChild(btnDel);
+
+          item.appendChild(col1);
+          item.appendChild(col2);
+          lista.appendChild(item);
+        }
+      }
+
+      document.getElementById('dayOverlay').classList.add('day-overlay--open');
+    }
+
+    function fecharOverlay() {
+      document.getElementById('dayOverlay').classList.remove('day-overlay--open');
+    }
+
+    function preencherFormEdicao(ev) {
+      document.getElementById('idAgenda').value = ev.id;
+      document.getElementById('horarioAgenda').value = ev.horario || "";
+      document.getElementById('tipoAgenda').value = ev.tipo || "ENTREVISTA";
+      document.getElementById('nomeClienteAgenda').value = ev.nome_cliente || "";
+      document.getElementById('cpfAgenda').value = ev.cpf || "";
+      document.getElementById('obsAgenda').value = ev.obs || "";
+    }
+
+    async function excluirAnotacao(ev) {
+      if (!confirm('Deseja realmente excluir esta anotação?')) return;
+      try {
+        const resp = await fetch(`/api/agenda/${ev.id}`, { method: 'DELETE' });
+        if (resp.ok) {
+          await carregarMes(anoAtual, mesAtual);
+          if (diaSelecionado) abrirDia(diaSelecionado);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function onSubmitAgenda(e) {
+      e.preventDefault();
+      if (!diaSelecionado) return;
+
+      const id = document.getElementById('idAgenda').value;
+      const horario = document.getElementById('horarioAgenda').value;
+      const tipo = document.getElementById('tipoAgenda').value;
+      const nome_cliente = document.getElementById('nomeClienteAgenda').value;
+      const cpf = document.getElementById('cpfAgenda').value;
+      const obs = document.getElementById('obsAgenda').value;
+
+      const dataStr = `${anoAtual}-${String(mesAtual).padStart(2, '0')}-${String(diaSelecionado).padStart(2, '0')}`;
+
+      const payload = {
+        data: dataStr,
+        horario,
+        tipo,
+        nome_cliente,
+        cpf,
+        obs
+      };
+
+      try {
+        let resp;
+        if (id) {
+          resp = await fetch(`/api/agenda/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        } else {
+          resp = await fetch('/api/agenda', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        }
+
+        if (resp.ok) {
+          await carregarMes(anoAtual, mesAtual);
+          abrirDia(diaSelecionado);
+        } else {
+          console.error('Erro ao salvar anotação');
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+
+</html>

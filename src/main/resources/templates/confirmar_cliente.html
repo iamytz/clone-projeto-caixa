@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .campo {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        span {
+            display: block;
+            padding: 8px;
+            background-color: #eee;
+            border-radius: 4px;
+        }
+
+        .botao {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        form+form {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Confirme os dados antes de salvar</h2>
+
+        {% set nomes_campos = {
+        'data_entrada': 'Data de Entrada',
+        'proponente': 'Nome do Proponente',
+        'cpf': 'CPF do Cliente',
+        'cca': 'Código CCA',
+        'contrato': 'Número do Contrato',
+        'valor_financiado': 'Valor Financiado',
+        'num_vendedor': 'Conta do Vendedor',
+        'modalidade': 'Modalidade',
+        'reciprocidade': 'Reciprocidade',
+        'interveniente_quitante': 'Interveniente Quitante',
+        'data_dev_garantia': 'Data de Devolução da Garantia',
+        'status': 'Status do Contrato',
+        'observacoes': 'Observações',
+        'nome_vendedor': 'Nome do Vendedor',
+        'cpf_vendedor': 'CPF/CNPJ do Vendedor'
+        } %}
+
+        <form action="/salvar_cliente" method="post">
+            {% for campo, valor in dados.items() %}
+            <div class="campo">
+                <label>{{ nomes_campos.get(campo, campo.replace('_', ' ').title()) }}.</label>
+                <span>{{ valor }}</span>
+                <input type="hidden" name="{{ campo }}" value="{{ valor }}">
+            </div>
+            {% endfor %}
+            <div class="botao">
+                <button type="submit">Confirmar e Salvar</button>
+            </div>
+        </form>
+
+        <form action="/homepage" method="post">
+            <div class="botao">
+                <button type="submit">Voltar à Página Inicial</button>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
+
+
+
+
+
+
+
+<form action="/salvar_cliente" method="post"></form>

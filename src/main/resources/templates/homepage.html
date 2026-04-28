@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Página Inicial • Gestão de Clientes</title>
+  <meta name="color-scheme" content="light dark">
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --text: #0f172a;
+      --muted: #475569;
+      --card: #ffffff;
+      --primary: #007BFF;
+      --primary-2: #1a17df;
+      --ring: rgba(11, 0, 211, 0.35);
+      --shadow: 0 10px 20px rgba(2, 8, 23, .08), 0 2px 6px rgba(2, 8, 23, .06);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b1220;
+        --text: #e5e7eb;
+        --muted: #94a3b8;
+        --card: #0f172a;
+        --shadow: 0 10px 20px rgba(0, 0, 0, .4), 0 2px 6px rgba(0, 0, 0, .35);
+      }
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      height: 100%
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 500 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: #fff;
+      padding: 56px 20px 72px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      font-size: clamp(1.6rem, 2.5vw + 1rem, 2.25rem);
+    }
+
+    .hero p {
+      margin: 10px 0 0;
+      color: #eef2ff;
+      max-width: 800px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 24px auto 48px;
+      padding: 0 20px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .card-btn {
+      appearance: none;
+      border: 0;
+      background: var(--card);
+      color: inherit;
+      text-align: left;
+      width: 100%;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+      cursor: pointer;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: start;
+      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+    .card-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 30px rgba(2, 8, 23, .12), 0 6px 10px rgba(2, 8, 23, .08)
+    }
+
+    .card-btn:active {
+      transform: translateY(-1px)
+    }
+
+    .card-btn:focus-visible {
+      outline: 3px solid var(--ring);
+      outline-offset: 2px
+    }
+
+    .icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: rgba(79, 70, 229, .1);
+      color: var(--primary);
+    }
+
+    .icon--search {
+      background: rgba(16, 185, 129, .12);
+      color: #10b981
+    }
+
+    .icon--edit {
+      background: rgba(22, 42, 134, 0.14);
+      color: #142fca
+    }
+
+    .icon--back {
+      background: rgba(106, 17, 133, 0.12);
+      color: #8e44ef
+    }
+
+    .card-title {
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin: 6px 0 2px;
+      display: block
+    }
+
+    .card-desc {
+      color: var(--muted);
+      font-weight: 400;
+      font-size: .95rem;
+      display: block
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      margin-top: 28px;
+      font-size: .9rem
+    }
+
+    .fab {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 1000;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: #fff;
+      text-decoration: none;
+      box-shadow: 0 10px 24px rgba(79, 70, 229, .35);
+      font-weight: 700;
+      letter-spacing: .2px;
+      transition: transform .15s ease, box-shadow .15s ease, opacity .2s ease;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .fab:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 34px rgba(79, 70, 229, .45)
+    }
+
+    .fab:focus-visible {
+      outline: 3px solid var(--ring);
+      outline-offset: 3px;
+      border-radius: 999px
+    }
+
+    .fab .plus {
+      width: 20px;
+      height: 20px;
+      display: inline-block
+    }
+
+    main.container {
+      padding-bottom: 120px;
+    }
+
+    /* Toast */
+
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #28a745;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transform: translateX(120%);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      z-index: 9999;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+
+    .logo-overlay {
+      position: absolute;
+      top: 30px;
+      /* distância do topo */
+      left: 20px;
+      /* distância da esquerda */
+      max-height: 160px;
+      /* mantém proporção */
+      z-index: 10;
+      /* garante que fique acima do conteúdo */
+    }
+
+    .hero {
+      position: relative;
+      /* necessário para que o posicionamento absoluto funcione */
+    }
+
+    .icon--agenda {
+      background: rgba(249, 115, 22, 0.14);
+      color: #f97316;
+    }
+
+    .agenda-alert {
+      box-shadow: 0 0 0 2px #f97316;
+    }
+
+    .agenda-badge {
+      color: #f97316;
+      margin-left: 6px;
+      font-size: 0.75rem;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="hero" role="banner">
+    <img src="static/imagens/logo2.png" alt="Logo" class="logo-overlay">
+    <div class="container">
+      <h1>Central Habitação CAIXA</h1>
+      <p>Bem-vindo! Escolha uma ação abaixo para gerenciar seus clientes com rapidez e segurança.</p>
+    </div>
+
+  </header>
+  <main class="container" role="main">
+    <section aria-label="Atalhos de navegação">
+      <div class="grid">
+        <button type="button" class="card-btn" aria-label="Cadastrar Cliente" data-href="/cadastro">
+          <span class="icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2h6z" />
+            </svg>
+          </span>
+          <span>
+            <span class="card-title">Cadastrar Cliente</span>
+            <span class="card-desc">Adicionar um novo cliente ao sistema.</span>
+          </span>
+        </button>
+        <button type="button" class="card-btn" aria-label="Procurar Cliente" data-href="/buscar_cliente">
+          <span class="icon icon--search">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 000-1.42l-2.34-2.34a1.003 1.003 0 00-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z" />
+            </svg>
+          </span>
+          <span>
+            <span class="card-title">Buscar | Editar Cliente</span>
+            <span class="card-desc">Localize e edite clientes existentes.</span>
+          </span>
+        </button>
+        <button type="button" class="card-btn" aria-label="Editar Cliente" data-href="/momento_vendedor">
+          <span class="icon icon--edit">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M21 20l-5.6-5.6a7.5 7.5 0 10-1.4 1.4L20 21l1-1zM4 10.5a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0z" />
+            </svg>
+          </span>
+          <span>
+            <span class="card-title">Momento Vendedor</span>
+            <span class="card-desc">Busque por clientes na esteira.</span>
+          </span>
+        </button>
+        <button type="button" class="card-btn" aria-label="Esteira Habitação" data-href="/esteira_habitacao">
+          <span class="icon icon--back">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V9.5z" />
+            </svg>
+          </span>
+          <span>
+            <span class="card-title">Esteira Habitação</span>
+            <span class="card-desc">Busque por clientes na Esteira SBPE - MCMV</span>
+          </span>
+        </button>
+        <button type="button" class="card-btn" aria-label="Agenda" data-href="/agenda">
+          <span class="icon icon--agenda">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 2h2v2h6V2h2v2h3v18H4V4h3V2zm13 6H6v12h14V8zM8 10h5v5H8v-5z" />
+            </svg>
+          </span>
+          <span>
+            <span class="card-title">Agenda</span>
+            <span class="card-desc">Entrevistas e contratos agendados.</span>
+          </span>
+      </div>
+    </section>
+    <p class="footer">Dica: <code>Preencha Todos os Campos Corretamente</code> Para evitar possíveis incongruências</p>
+  </main>
+  <button type="button" class="fab" title="Mais Ferramentas" aria-label="Voltar" data-href="/">
+    <svg class="plus" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="10" fill="rgba(255,255,255,.15)" />
+      <path
+        d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 000-1.42l-2.34-2.34a1.003 1.003 0 00-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"
+        stroke="#fff" stroke-width="2" stroke-linecap="round" />
+    </svg>
+    Voltar a Página Inicial
+  </button>
+
+  <!-- Toast -->
+  <div id="toast" class="toast">😁 Cadastro salvo com sucesso!</div>
+
+  <script>
+    document.querySelectorAll('button[data-href]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var url = btn.getAttribute('data-href');
+        if (!url) {
+          alert('Defina o link no atributo data-href deste botão.');
+          return;
+        }
+        window.location.href = url;
+      });
+    });
+
+    // Função para mostrar toast se houver parâmetro status=sucesso
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('status') === 'sucesso') {
+      showToast('😁 Cadastro salvo com sucesso!');
+    }
+    else if (params.get('status') === 'excluido') {
+      const toast = document.getElementById('toast');
+      toast.style.backgroundColor = '#dc3545'; // vermelho
+      showToast('🗑️ Cliente excluído com sucesso!');
+    }
+
+  </script>
+
+  <script>
+    // Destaca botão da agenda se houver compromisso hoje
+    fetch('/api/agenda/hoje')
+      .then(resp => resp.ok ? resp.json() : null)
+      .then(data => {
+        if (!data || !data.hoje_tem) return;
+        const agendaBtn = document.querySelector('button[data-href="/agenda"]');
+        if (!agendaBtn) return;
+
+        agendaBtn.classList.add('agenda-alert');
+
+        const titleSpan = agendaBtn.querySelector('.card-title');
+        if (titleSpan) {
+          const badge = document.createElement('span');
+          badge.className = 'agenda-badge';
+          badge.textContent = '● hoje';
+          titleSpan.appendChild(badge);
+        }
+      })
+      .catch(() => { });
+  </script>
+
+
+
+
+</body>
+
+</html>
