@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="UTF-8">
@@ -104,7 +104,7 @@
 
     <header>
         <div style="display: flex; align-items: center; gap: 10px;">
-            <img src="/static/imagens/logo2.png" alt="Logo" class="logo">
+            <img th:src="@{img/logo2.png}" alt="Logo" class="logo">
         </div>
         <h1>Editar Cliente</h1>
 
@@ -149,7 +149,7 @@
         function formatCCA(CCA) {
             if (!CCA) return '';
             CCA = CCA.replace(/\D/g, '');
-            return CCA.replace(/(\d{4})(\d{1})/, '$1-$2');
+            return CCA.replace(/(\d{5})(\d{1})/, '$1-$2');
         }
 
 
@@ -159,23 +159,28 @@
             exibirClientes(clientes);
         }
 
-        function exibirClientes(clientes) {
-            const tbody = document.querySelector('#clientesTable tbody');
-            tbody.innerHTML = '';
-            clientes.forEach(cliente => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${cliente.proponente}</td>
-                    <td>${formatCPF(cliente.cpf)}</td>
-                    <td>${formatCCA(cliente.cca)}</td>
-                    <td>${formatNumContrato(cliente.numContrato)}</td>
-                `;
-                tr.onclick = () => {
-                    window.location.href = `/buscar_cliente/edit/${cliente.CPF}`;
-                };
-                tbody.appendChild(tr);
-            });
-        }
+
+function exibirClientes(clientes) {
+    const tbody = document.querySelector('#clientesTable tbody');
+    tbody.innerHTML = '';
+
+    clientes.forEach(cliente => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${cliente.proponente ?? ''}</td>
+            <td>${formatCPF(cliente.cpf)}</td>
+            <td>${formatCCA(cliente.cca)}</td>
+            <td>${formatNumContrato(cliente.numContrato)}</td>
+        `;
+
+        tr.onclick = () => {
+            window.location.href = `/buscar_cliente/edit/${cliente.cpf}`;
+        };
+
+        tbody.appendChild(tr);
+    });
+}
+
 
         async function buscarCliente() {
             const termo = document.getElementById('searchInput').value.toLowerCase();

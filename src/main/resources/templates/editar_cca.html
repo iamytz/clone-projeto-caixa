@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Editar CCA / Contatos</title>
+  <style>
+    /* === ESTILO BASE (inspirado no editar_cliente_novo.html) === */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #fff;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #007BFF;
+      color: white;
+      padding: 5px 10px;
+      gap: 10px;
+    }
+
+    header img { height: 90px; }
+
+    header h1 {
+      flex: 1;
+      text-align: center;
+      margin: 0;
+      font-size: 22px;
+    }
+
+    header button {
+      background-color: #fff;
+      color: #007BFF;
+      border: none;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 20px auto;
+      padding: 0 12px;
+    }
+
+    .card {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      padding: 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 980px) {
+      .grid { grid-template-columns: 1.2fr 0.8fr; }
+    }
+
+    /* Tabela */
+    .table-toolbar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .table-toolbar input {
+      flex: 1;
+      min-width: 220px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    th, td {
+      border-bottom: 1px solid #e6e6e6;
+      padding: 10px;
+      text-align: left;
+      font-size: 14px;
+      vertical-align: middle;
+    }
+
+    th {
+      background: #f1f5ff;
+      font-weight: bold;
+    }
+
+    tbody tr {
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    tbody tr:hover { background: #f6f9ff; }
+    tbody tr.selected { background: #e9f2ff; }
+
+    /* Form */
+    form label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    form input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    .hint {
+      margin-top: 6px;
+      color: #555;
+      font-size: 12px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 4px;
+      padding: 10px 20px;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 4px;
+      padding: 10px 20px;
+    }
+
+    .btn-secondary {
+      background-color: #ccc;
+      color: #333;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 4px;
+      padding: 10px 20px;
+    }
+
+    .btn-primary:disabled,
+    .btn-danger:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .status {
+      margin: 10px 0 0;
+      font-size: 13px;
+      color: #333;
+    }
+
+    .status.ok { color: #137333; }
+    .status.err { color: #b00020; }
+
+    /* Modal simples de confirmação de exclusão */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .modal-content {
+      background: #fff;
+      width: 420px;
+      max-width: 95vw;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .modal-buttons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      display: inline-block;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #eef3ff;
+      color: #1b3a8a;
+      border: 1px solid #d7e3ff;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="/static/imagens/logo2.png" alt="Logo" />
+    <h1>CCA / Contatos</h1>
+    <button type="button" onclick="voltar()">Voltar</button>
+  </header>
+
+  <div class="container">
+    <div class="grid">
+      <!-- LISTA / TABELA -->
+      <section class="card">
+        <div class="table-toolbar">
+          <input id="filtro" type="text" placeholder="Filtrar por CCA, contato, correspondente ou número..." />
+          <button class="btn-secondary" type="button" onclick="recarregar()">Recarregar</button>
+          <span class="pill" id="contador">0 registros</span>
+        </div>
+
+        <div style="overflow:auto; max-height: 70vh; border-radius: 6px;">
+          <table aria-label="Tabela de registros de CCA/Contato">
+            <thead>
+              <tr>
+                <th style="width: 90px;">ID_CCA</th>
+                <th style="width: 120px;">CCA</th>
+                <th>CONTATO</th>
+                <th>CORRESPONDENTE</th>
+                <th style="width: 160px;">NÚMERO</th>
+              </tr>
+            </thead>
+            <tbody id="tbody">
+              <!-- preenchido via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <p id="statusLista" class="status"></p>
+      </section>
+
+      <!-- EDIÇÃO -->
+      <section class="card">
+        <h2 style="margin: 0 0 10px; font-size: 18px;">Editar registro</h2>
+        <form id="formEdicao" autocomplete="off">
+          <label for="idCca">ID_CCA:</label>
+          <input id="idCca" name="ID_CCA" type="number" readonly />
+          <div class="hint">ID interno (não editável).</div>
+
+          <label for="cca">CCA:</label>
+          <input id="cca" name="CCA" type="text" maxlength="7" inputmode="numeric" placeholder="00000-0" required />
+          <div class="hint">Formato: 00000-0 (6 dígitos). Será salvo sem máscara.</div>
+
+          <label for="contato">CONTATO:</label>
+          <input id="contato" name="CONTATO" type="text" maxlength="120" required />
+
+          <label for="correspondente">CORRESPONDENTE:</label>
+          <input id="correspondente" name="CORRESPONDENTE" type="text" maxlength="120" />
+
+          <label for="numeroContato">NUMERO_CONTATO:</label>
+          <input id="numeroContato" name="NUMERO_CONTATO" type="text" maxlength="16" inputmode="tel" placeholder="(00) 00000-0000" />
+
+          <div class="buttons">
+            <button id="btnSalvar" type="button" class="btn-primary" onclick="salvar()" disabled>Salvar alterações</button>
+            <button id="btnExcluir" type="button" class="btn-danger" onclick="abrirModalExcluir()" disabled>Excluir</button>
+            <button id="btnCancelar" type="button" class="btn-secondary" onclick="cancelarEdicao()" disabled>Cancelar</button>
+          </div>
+
+          <p id="statusEdicao" class="status"></p>
+        </form>
+      </section>
+    </div>
+  </div>
+
+  <!-- Modal de confirmação para exclusão -->
+  <div id="modalExcluir" class="modal" role="dialog" aria-modal="true" aria-labelledby="tituloModal" aria-describedby="mensagemExcluir">
+    <div class="modal-content">
+      <h3 id="tituloModal" style="margin:0;">Confirmar exclusão</h3>
+      <p id="mensagemExcluir" style="margin-top:10px;"></p>
+      <div class="modal-buttons">
+        <button type="button" class="btn-danger" onclick="excluir()">Sim, excluir</button>
+        <button type="button" class="btn-secondary" onclick="fecharModalExcluir()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * ================== CONFIGURAÇÃO DE ENDPOINTS ==================
+     * Ajuste aqui para bater com seu backend.
+     * A página funciona com um endpoint de lista que retorna um array de objetos no formato:
+     * { CCA, CONTATO, CORRESPONDENTE, ID_CCA, NUMERO_CONTATO }
+     */
+    const API = {
+      list: '/api/get/cca',               // GET -> [{...}, {...}]
+      get: (id) => `/api/get/cca/${id}`,  // (opcional) GET -> {...}
+      update: (id) => `/api/put/cca/${id}`,// PUT/POST -> atualiza
+      remove: (id) => `/api/delete/cca/${id}`,// DELETE -> remove
+      validarCca: (cca) => `/api/validar-cca?cca=${encodeURIComponent(cca)}`
+    };
+
+    // ================== UTILIDADES / MÁSCARAS ==================
+    function apenasDigitos(str) {
+      return (str || '').replace(/\D/g, '');
+    }
+
+    // CCA: 00000-0 (6 dígitos)
+    function aplicarMascaraCCA(input) {
+      let value = apenasDigitos(input.value);
+      if (value.length > 6) value = value.slice(0, 6);
+      if (value.length > 5) value = value.replace(/(\d{5})(\d)/, '$1-$2');
+      input.value = value;
+    }
+
+    // Telefone: (00) 00000-0000 (aceita 10 ou 11 dígitos)
+    function aplicarMascaraTelefone(input) {
+      let v = apenasDigitos(input.value);
+      if (v.length > 11) v = v.slice(0, 11);
+      if (v.length <= 2) {
+        input.value = v;
+      } else if (v.length <= 6) {
+        input.value = v.replace(/(\d{2})(\d+)/, '($1) $2');
+      } else if (v.length <= 10) {
+        input.value = v.replace(/(\d{2})(\d{4})(\d+)/, '($1) $2-$3');
+      } else {
+        input.value = v.replace(/(\d{2})(\d{5})(\d+)/, '($1) $2-$3');
+      }
+    }
+
+    function setStatus(el, msg, type='') {
+      el.textContent = msg || '';
+      el.classList.remove('ok', 'err');
+      if (type === 'ok') el.classList.add('ok');
+      if (type === 'err') el.classList.add('err');
+    }
+
+    // ================== ESTADO DA TELA ==================
+    let registros = [];          // lista completa
+    let registrosFiltrados = []; // lista filtrada
+    let selecionadoId = null;    // ID_CCA selecionado
+
+    const tbody = document.getElementById('tbody');
+    const filtro = document.getElementById('filtro');
+    const contador = document.getElementById('contador');
+    const statusLista = document.getElementById('statusLista');
+
+    const form = document.getElementById('formEdicao');
+    const idCcaInput = document.getElementById('idCca');
+    const ccaInput = document.getElementById('cca');
+    const contatoInput = document.getElementById('contato');
+    const correspondenteInput = document.getElementById('correspondente');
+    const numeroInput = document.getElementById('numeroContato');
+    const statusEdicao = document.getElementById('statusEdicao');
+
+    const btnSalvar = document.getElementById('btnSalvar');
+    const btnExcluir = document.getElementById('btnExcluir');
+    const btnCancelar = document.getElementById('btnCancelar');
+
+    function habilitarEdicao(habilitar) {
+      btnSalvar.disabled = !habilitar;
+      btnExcluir.disabled = !habilitar;
+      btnCancelar.disabled = !habilitar;
+    }
+
+    function limparFormulario() {
+      idCcaInput.value = '';
+      ccaInput.value = '';
+      contatoInput.value = '';
+      correspondenteInput.value = '';
+      numeroInput.value = '';
+      setStatus(statusEdicao, '');
+      selecionadoId = null;
+      habilitarEdicao(false);
+    }
+
+    function selecionarLinha(id) {
+      selecionadoId = id;
+      // destaca a linha
+      [...tbody.querySelectorAll('tr')].forEach(tr => {
+        tr.classList.toggle('selected', tr.dataset.idCca === String(id));
+      });
+
+      // pega do cache
+      const reg = registros.find(r => String(r.ID_CCA) === String(id));
+      if (!reg) return;
+
+      idCcaInput.value = reg.ID_CCA ?? '';
+      ccaInput.value = formatarCCA(reg.CCA ?? '');
+      contatoInput.value = reg.CONTATO ?? '';
+      correspondenteInput.value = reg.CORRESPONDENTE ?? '';
+      numeroInput.value = formatarTelefone(reg.NUMERO_CONTATO ?? '');
+
+      setStatus(statusEdicao, 'Registro carregado. Você pode editar e salvar.', 'ok');
+      habilitarEdicao(true);
+    }
+
+    function formatarCCA(valor) {
+      const v = apenasDigitos(valor);
+      if (v.length !== 6) return valor || '';
+      return v.replace(/(\d{5})(\d)/, '$1-$2');
+    }
+
+    function formatarTelefone(valor) {
+      const v = apenasDigitos(valor);
+      if (!v) return '';
+      if (v.length === 10) return v.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+      if (v.length === 11) return v.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+      return valor || '';
+    }
+
+    function renderTabela(lista) {
+      tbody.innerHTML = '';
+      for (const item of lista) {
+        const tr = document.createElement('tr');
+        tr.dataset.idCca = item.ID_CCA;
+        tr.innerHTML = `
+          <td>${item.ID_CCA ?? ''}</td>
+          <td>${formatarCCA(item.CCA ?? '')}</td>
+          <td>${escapeHtml(item.CONTATO ?? '')}</td>
+          <td>${escapeHtml(item.CORRESPONDENTE ?? '')}</td>
+          <td>${formatarTelefone(item.NUMERO_CONTATO ?? '')}</td>
+        `;
+        tr.addEventListener('click', () => selecionarLinha(item.ID_CCA));
+        tbody.appendChild(tr);
+      }
+      contador.textContent = `${lista.length} registro${lista.length === 1 ? '' : 's'}`;
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function aplicarFiltro() {
+      const q = (filtro.value || '').trim().toLowerCase();
+      if (!q) {
+        registrosFiltrados = [...registros];
+      } else {
+        registrosFiltrados = registros.filter(r => {
+          const c1 = String(r.ID_CCA ?? '').toLowerCase();
+          const c2 = String(r.CCA ?? '').toLowerCase();
+          const c3 = String(r.CONTATO ?? '').toLowerCase();
+          const c4 = String(r.CORRESPONDENTE ?? '').toLowerCase();
+          const c5 = String(r.NUMERO_CONTATO ?? '').toLowerCase();
+          return (c1 + ' ' + c2 + ' ' + c3 + ' ' + c4 + ' ' + c5).includes(q);
+        });
+      }
+      renderTabela(registrosFiltrados);
+
+      // se o selecionado sumiu do filtro, cancela seleção
+      if (selecionadoId != null) {
+        const aindaExiste = registrosFiltrados.some(r => String(r.ID_CCA) === String(selecionadoId));
+        if (!aindaExiste) limparFormulario();
+      }
+    }
+
+    // ================== CARREGAMENTO ==================
+    async function carregarLista() {
+      setStatus(statusLista, 'Carregando lista...');
+      try {
+        const resp = await fetch(API.list);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+
+        if (!Array.isArray(data)) {
+          throw new Error('O endpoint de lista não retornou um array JSON.');
+        }
+
+        // normaliza
+        registros = data.map(x => ({
+          CCA: x.CCA ?? '',
+          CONTATO: x.CONTATO ?? '',
+          CORRESPONDENTE: x.CORRESPONDENTE ?? '',
+          ID_CCA: x.ID_CCA,
+          NUMERO_CONTATO: x.NUMERO_CONTATO ?? ''
+        }));
+
+        registrosFiltrados = [...registros];
+        renderTabela(registrosFiltrados);
+        setStatus(statusLista, `Lista carregada com sucesso (${registros.length}).`, 'ok');
+      } catch (err) {
+        console.error(err);
+        setStatus(statusLista, 'Erro ao carregar a lista. Verifique o endpoint em API.list.', 'err');
+        registros = [];
+        registrosFiltrados = [];
+        renderTabela([]);
+        limparFormulario();
+      }
+    }
+
+    async function recarregar() {
+      limparFormulario();
+      await carregarLista();
+    }
+
+    // ================== SALVAR / EXCLUIR ==================
+    function montarPayload() {
+      const payload = {
+        ID_CCA: Number(idCcaInput.value),
+        CCA: apenasDigitos(ccaInput.value),
+        CONTATO: (contatoInput.value || '').trim(),
+        CORRESPONDENTE: (correspondenteInput.value || '').trim(),
+        NUMERO_CONTATO: apenasDigitos(numeroInput.value)
+      };
+      return payload;
+    }
+
+    async function validarAntesDeSalvar(payload) {
+      if (!payload.ID_CCA && payload.ID_CCA !== 0) {
+        throw new Error('Selecione um registro na tabela para editar.');
+      }
+      if (!payload.CONTATO) {
+        throw new Error('CONTATO é obrigatório.');
+      }
+      if (payload.CCA && payload.CCA.length !== 6) {
+        throw new Error('CCA deve ter 6 dígitos.');
+      }
+      if (payload.NUMERO_CONTATO) {
+        const n = payload.NUMERO_CONTATO.length;
+        if (n !== 10 && n !== 11) {
+          throw new Error('NUMERO_CONTATO deve ter 10 ou 11 dígitos (com DDD).');
+        }
+      }
+
+      // Validação opcional de CCA no backend (igual editar_cliente_novo)
+      if (payload.CCA) {
+        try {
+          const resp = await fetch(API.validarCca(payload.CCA));
+          if (resp.ok) {
+            const data = await resp.json();
+            if (data && data.valido === false) {
+              throw new Error('CCA inválido ou inexistente.');
+            }
+          }
+        } catch (e) {
+          // Se sua API de validação não existir, ignore silenciosamente
+          // Remova este catch se quiser bloquear quando a validação falhar.
+        }
+      }
+    }
+
+    async function salvar() {
+      const payload = montarPayload();
+      setStatus(statusEdicao, 'Validando...', '');
+      try {
+        await validarAntesDeSalvar(payload);
+      } catch (e) {
+        setStatus(statusEdicao, e.message || 'Dados inválidos.', 'err');
+        return;
+      }
+
+      setStatus(statusEdicao, 'Salvando alterações...', '');
+      try {
+        const resp = await fetch(API.update(payload.ID_CCA), {
+          method: 'PUT', // troque para 'POST' se seu backend usar POST
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!resp.ok) {
+          const erro = await resp.json().catch(() => null);
+          console.error('Erro ao salvar:', erro || resp.statusText);
+          throw new Error('Erro ao salvar. Verifique o endpoint em API.update.');
+        }
+
+        setStatus(statusEdicao, 'Salvo com sucesso!', 'ok');
+
+        // Atualiza o cache local sem precisar recarregar tudo
+        const idx = registros.findIndex(r => String(r.ID_CCA) === String(payload.ID_CCA));
+        if (idx >= 0) {
+          registros[idx] = {
+            ...registros[idx],
+            ...payload
+          };
+        }
+        aplicarFiltro();
+
+      } catch (err) {
+        console.error(err);
+        setStatus(statusEdicao, err.message || 'Erro ao salvar.', 'err');
+      }
+    }
+
+    // Modal exclusão
+    function abrirModalExcluir() {
+      if (selecionadoId == null) return;
+      const reg = registros.find(r => String(r.ID_CCA) === String(selecionadoId));
+      const msg = reg
+        ? `Você realmente deseja excluir o registro do contato "${reg.CONTATO}" (CCA ${formatarCCA(reg.CCA)})?`
+        : 'Você realmente deseja excluir este registro?';
+      document.getElementById('mensagemExcluir').textContent = msg;
+      document.getElementById('modalExcluir').style.display = 'flex';
+    }
+
+    function fecharModalExcluir() {
+      document.getElementById('modalExcluir').style.display = 'none';
+    }
+
+    async function excluir() {
+      if (selecionadoId == null) return;
+      fecharModalExcluir();
+      setStatus(statusEdicao, 'Excluindo...', '');
+      try {
+        const resp = await fetch(API.remove(selecionadoId), { method: 'DELETE' });
+        if (!resp.ok) {
+          throw new Error('Erro ao excluir. Verifique o endpoint em API.remove.');
+        }
+
+        // remove do cache
+        registros = registros.filter(r => String(r.ID_CCA) !== String(selecionadoId));
+        limparFormulario();
+        aplicarFiltro();
+        setStatus(statusLista, 'Registro excluído com sucesso.', 'ok');
+      } catch (err) {
+        console.error(err);
+        setStatus(statusEdicao, err.message || 'Erro ao excluir.', 'err');
+      }
+    }
+
+    function cancelarEdicao() {
+      // volta os campos para o valor do selecionado (ou limpa se nada)
+      if (selecionadoId == null) {
+        limparFormulario();
+        return;
+      }
+      selecionarLinha(selecionadoId);
+      setStatus(statusEdicao, 'Edição cancelada.', '');
+    }
+
+    // ================== NAVEGAÇÃO ==================
+    function voltar() {
+      window.history.back();
+    }
+
+    // ================== EVENTOS ==================
+    document.addEventListener('DOMContentLoaded', () => {
+      // máscaras
+      ccaInput.addEventListener('input', (e) => aplicarMascaraCCA(e.target));
+      numeroInput.addEventListener('input', (e) => aplicarMascaraTelefone(e.target));
+
+      // filtro
+      filtro.addEventListener('input', () => aplicarFiltro());
+
+      // fecha modal clicando fora
+      const modal = document.getElementById('modalExcluir');
+      modal.addEventListener('click', (ev) => {
+        if (ev.target === modal) fecharModalExcluir();
+      });
+
+      // carrega lista inicial
+      limparFormulario();
+      carregarLista();
+    });
+
+    // expõe funções para onclick
+    window.recarregar = recarregar;
+    window.salvar = salvar;
+    window.voltar = voltar;
+    window.abrirModalExcluir = abrirModalExcluir;
+    window.fecharModalExcluir = fecharModalExcluir;
+    window.excluir = excluir;
+    window.cancelarEdicao = cancelarEdicao;
+  </script>
+</body>
+</html>

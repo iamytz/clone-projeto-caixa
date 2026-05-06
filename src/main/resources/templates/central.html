@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
   <meta charset="utf-8" />
   <title>Página Inicial</title>
   <style>
     body {
-      background-image: url('/static/imagens/fundo.png');
+      background-image: url("/img/fundo.png");
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -72,7 +72,7 @@
 <body>
 
   <div class="imagem-header">
-    <img src="static/imagens/fundo_hab.png" alt="Logo" class="logo-overlay">
+    <img th:src="@{/img/fundo_hab.png}" alt="Logo" class="logo-overlay">
   </div>
 
   <div class="container">

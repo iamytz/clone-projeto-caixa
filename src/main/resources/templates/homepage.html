@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
   <meta charset="utf-8">
@@ -257,7 +257,7 @@
 
 <body>
   <header class="hero" role="banner">
-    <img src="static/imagens/logo2.png" alt="Logo" class="logo-overlay">
+    <img th:src="@{img/logo2.png}" alt="Logo" class="logo-overlay">
     <div class="container">
       <h1>Central Habitação CAIXA</h1>
       <p>Bem-vindo! Escolha uma ação abaixo para gerenciar seus clientes com rapidez e segurança.</p>
@@ -312,16 +312,38 @@
             <span class="card-desc">Busque por clientes na Esteira SBPE - MCMV</span>
           </span>
         </button>
-        <button type="button" class="card-btn" aria-label="Agenda" data-href="/agenda">
-          <span class="icon icon--agenda">
+        <button type="button" class="card-btn" aria-label="Editar Cliente" data-href="/cca_teste">
+          <span class="icon icon--edit">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M7 2h2v2h6V2h2v2h3v18H4V4h3V2zm13 6H6v12h14V8zM8 10h5v5H8v-5z" />
+              <path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2h6z" />
             </svg>
           </span>
           <span>
-            <span class="card-title">Agenda</span>
-            <span class="card-desc">Entrevistas e contratos agendados.</span>
+            <span class="card-title">Cadastrar CCA</span>
+            <span class="card-desc">Edite e Cadastre Novos CCA</span>
           </span>
+          <button type="button" class="card-btn" aria-label="Procurar Cliente" data-href="/editar_cca">
+            <span class="icon icon--search">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 000-1.42l-2.34-2.34a1.003 1.003 0 00-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z" />
+              </svg>
+            </span>
+            <span>
+              <span class="card-title">Buscar | Editar CCA</span>
+              <span class="card-desc">Localize e edite CCA's existentes.</span>
+            </span>
+          </button>
+          <button type="button" class="card-btn" aria-label="Agenda" data-href="/agenda">
+            <span class="icon icon--agenda">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7 2h2v2h6V2h2v2h3v18H4V4h3V2zm13 6H6v12h14V8zM8 10h5v5H8v-5z" />
+              </svg>
+            </span>
+            <span>
+              <span class="card-title">Agenda</span>
+              <span class="card-desc">Entrevistas e contratos agendados.</span>
+            </span>
       </div>
     </section>
     <p class="footer">Dica: <code>Preencha Todos os Campos Corretamente</code> Para evitar possíveis incongruências</p>
@@ -333,6 +355,8 @@
         d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 000-1.42l-2.34-2.34a1.003 1.003 0 00-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"
         stroke="#fff" stroke-width="2" stroke-linecap="round" />
     </svg>
+
+    
     Voltar a Página Inicial
   </button>
 

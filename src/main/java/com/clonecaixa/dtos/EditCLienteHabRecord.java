@@ -1,10 +1,9 @@
 package com.clonecaixa.dtos;
+
 import java.time.LocalDate;
 
-
-public record ClientesHabRecordDto(LocalDate dataEntrada,
+public record EditCLienteHabRecord(LocalDate dataEntrada,
                                    String proponente,
-                                   String cpf,
                                    String cca,
                                    String numContrato,
                                    String valorFinanciado,
@@ -17,7 +16,5 @@ public record ClientesHabRecordDto(LocalDate dataEntrada,
                                    String nomeVendedor,
                                    String vendedorCpfCnpj,
                                    String contaCaixa,
-                                   String conformidade)
-{
-
+                                   String conformidade) {
 }

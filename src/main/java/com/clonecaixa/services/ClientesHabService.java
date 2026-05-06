@@ -1,18 +1,17 @@
 package com.clonecaixa.services;
 
-import com.clonecaixa.dtos.HabCcaRecordDto;
-import com.clonecaixa.dtos.ClientesHabRecordDto;
+import com.clonecaixa.dtos.*;
 import com.clonecaixa.entitys.ClientesHab;
 import com.clonecaixa.repositorys.ClientesHabRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class ClientesHabService {
     //injelção de dependencia (metodo construtor)
     public ClientesHabRepository repository;
-
     public ClientesHabService(ClientesHabRepository repository) {
         this.repository = repository;
     }
@@ -32,12 +31,102 @@ public class ClientesHabService {
                 cliente.getDataDevGarantia(),
                 cliente.getObs(),
                 cliente.getNomeVendedor(),
-                cliente.getVenededorCpfCnpj(),
-                cliente.getContaCaixa());
+                cliente.getVendedorCpfCnpj(),
+                cliente.getContaCaixa(),
+                cliente.getConformidade());
     }
 
     public List<HabCcaRecordDto> acharCca(){
         return repository.findAll().stream().map(cliente-> new HabCcaRecordDto(cliente.getProponente(),cliente.getCpf(), cliente.getCca(), cliente.getNumContrato())).toList();
     }
+
+
+
+    public ClientesHab salvarByCpf(String cpf, EditCLienteHabRecord dto) {
+        ClientesHab cliente = repository.findByCpf(cpf);
+        cliente.setDataEntrada(dto.dataEntrada());
+        cliente.setProponente(dto.proponente());
+        cliente.setCca(dto.cca());
+        cliente.setNumContrato(dto.numContrato());
+        cliente.setValorFinanciado(dto.valorFinanciado());
+        cliente.setStatus(dto.status());
+        cliente.setModalidade(dto.modalidade());
+        cliente.setReciprocidade(dto.reciprocidade());
+        cliente.setIntervenienteQuitante(dto.intervenienteQuitante());
+        cliente.setDataDevGarantia(dto.dataDevGarantia());
+        cliente.setObs(dto.obs());
+        cliente.setNomeVendedor(dto.nomeVendedor());
+        cliente.setVendedorCpfCnpj(dto.vendedorCpfCnpj());
+        cliente.setContaCaixa(dto.contaCaixa());
+        cliente.setConformidade(dto.conformidade());
+        return repository.save(cliente);
+
+    }
+
+
+    public ClientesHab salvarCliente(ClientesHabRecordDto dto) {
+        ClientesHab cliente = new ClientesHab();
+        cliente.setDataEntrada(dto.dataEntrada());
+        cliente.setProponente(dto.proponente());
+        cliente.setCpf(dto.cpf());
+        cliente.setCca(dto.cca());
+        cliente.setNumContrato(dto.numContrato());
+        cliente.setValorFinanciado(dto.valorFinanciado());
+        cliente.setStatus(dto.reciprocidade());
+        cliente.setModalidade(dto.modalidade());
+        cliente.setReciprocidade(dto.reciprocidade());
+        cliente.setIntervenienteQuitante(dto.intervenienteQuitante());
+        cliente.setDataDevGarantia(dto.dataDevGarantia());
+        cliente.setObs(dto.obs());
+        cliente.setNomeVendedor(dto.nomeVendedor());
+        cliente.setVendedorCpfCnpj(dto.vendedorCpfCnpj());
+        cliente.setContaCaixa(dto.contaCaixa());
+        cliente.setConformidade(dto.conformidade());
+        return repository.save(cliente);
+    }
+
+    public boolean returnValidCca(String cca) {
+        return repository.existsByCca(cca);
+    }
+
+    public List<ClientesHab> filtroMomentoVendedor(FiltroMomentoVendedorRecord dto) {
+        List<String> listaStatus = dto.statuses();
+        List<String> listaContas = dto.contas();
+        List<String> listaDev = dto.dev();
+        boolean statusesExists = listaStatus.isEmpty();
+        boolean contasExists = listaContas.isEmpty();
+
+        boolean devCom = listaDev.isEmpty() || listaDev.contains("com");
+        boolean devSem = listaDev.isEmpty() || listaDev.contains("sem");
+
+        if (statusesExists) {
+            listaStatus = List.of("_sem_filtro_status_");
+        }
+        if (contasExists) {
+            listaContas = List.of("_sem_filtr_contas_");
+        }
+
+        return repository.buscarPorFiltro(dto.startDate(),dto.endDate(),listaStatus,statusesExists,listaContas,contasExists,devCom,devSem);
+    }
+
+
+    public List<ClientesHab> filtroEsteirahab(FiltroEsteiraHabRecord dto) {
+        List<String> listaStatus = dto.statuses();
+        List<String> listaConformidade = dto.conformidade();
+
+        boolean existsStatus = listaStatus.isEmpty();
+        boolean existsConformidade = listaConformidade.isEmpty();
+
+        if (existsStatus) {
+            listaStatus = List.of("_sem_filtr_status");
+        }
+        if (existsConformidade) {
+            listaConformidade = List.of("_sem_filtro_conformidade_");
+        }
+
+        return repository.buscarFiltroEsteira(dto.cca(),existsStatus,listaStatus,existsConformidade,listaConformidade);
+    }
+
+
 
 }

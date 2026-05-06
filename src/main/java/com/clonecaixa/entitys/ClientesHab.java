@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 
@@ -16,25 +17,25 @@ public class ClientesHab {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "dataEntrada",nullable = false)
-    private Date dataEntrada;
+    @Column(name = "dataEntrada", nullable = false)
+    private LocalDate dataEntrada;
 
-    @Column(name = "proponente",nullable = false)
+    @Column(name = "proponente", nullable = false)
     private String proponente;
 
-    @Column(name = "cpf",unique = true,nullable = false)
+    @Column(name = "cpf", unique = true, nullable = false)
     private String cpf;
 
-    @Column(name = "cca",nullable = false)
+    @Column(name = "cca", nullable = false)
     private String cca;
 
-    @Column(name = "numContrato",nullable = false)
+    @Column(name = "numContrato", nullable = false)
     private String numContrato;
 
-    @Column(name = "valorFinanciado",nullable = false)
-    private float valorFinanciado;
+    @Column(name = "valorFinanciado", nullable = false)
+    private String valorFinanciado;
 
-    @Column(name = "status",nullable = false)
+    @Column(name = "status", nullable = false)
     private String status;
 
     @Column(name = "modalidade")
@@ -47,7 +48,7 @@ public class ClientesHab {
     private String intervenienteQuitante;
 
     @Column(name = "dataDevGarantia")
-    private Date dataDevGarantia;
+    private LocalDate dataDevGarantia;
 
     @Column(name = "obs")
     private String obs;
@@ -56,14 +57,11 @@ public class ClientesHab {
     private String nomeVendedor;
 
     @Column(name = "vendedorCpfCnpj")
-    private String venededorCpfCnpj;
+    private String vendedorCpfCnpj;
 
-    @Column(name = "contaCaixa",nullable = false)
-    private char contaCaixa;
+    @Column(name = "contaCaixa", nullable = false)
+    private String contaCaixa;
 
-
-
-
-
-
+    @Column(name = "conformidade")
+    private String conformidade;
 }

@@ -191,17 +191,17 @@
     <script>
 
         function loadData() {
-            const start_date = document.getElementById('start_date').value;
-            const end_date = document.getElementById('end_date').value;
+            const startDate = document.getElementById('start_date').value || null;
+            const endDate = document.getElementById('end_date').value || null;
 
             const statuses = Array.from(document.querySelectorAll('.status:checked')).map(cb => cb.value);
             const contas = Array.from(document.querySelectorAll('.conta:checked')).map(cb => cb.value);
             const dev = Array.from(document.querySelectorAll('.dev:checked')).map(cb => cb.value);
 
-            fetch('/get_data', {
+            fetch('/api/momento_vendedor', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ start_date, end_date, statuses, contas, dev })
+                body: JSON.stringify({ startDate, endDate, statuses, contas, dev })
             })
                 .then(res => res.json())
                 .then(data => renderTable(data));
@@ -245,14 +245,14 @@
 
             data.forEach(row => {
                 const tr = `<tr>
-            <td>${formatDate(row.DATA_ENTRADA)}</td>
-            <td>${row.PROPONENTE}</td>
-            <td>${formatCPF(row.CPF)}</td>
-            <td>${row.CONTA_VENDEDOR}</td>
-            <td>R$ ${(row.VALOR_FINANCIADO / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-            <td>${statusMap[row.STATUS] || row.STATUS}</td>
-            <td>${formatNumContrato(row.NUM_CONTRATO)}</td>
-            <td>${formatDate(row.DATA_DEV_GARATIA)}</td>
+            <td>${formatDate(row.dataEntrada)}</td>
+            <td>${row.proponente}</td>
+            <td>${formatCPF(row.cpf)}</td>
+            <td>${row.contaVendedor}</td>
+            <td>R$ ${(row.valorFinanciado / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+            <td>${statusMap[row.status] || row.STATUS}</td>
+            <td>${formatNumContrato(row.numContato)}</td>
+            <td>${formatDate(row.dataDevGarantia)}</td>
 
         </tr>`;
                 tbody.innerHTML += tr;

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Cliente</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #007BFF;
+            color: white;
+            padding: 5px 10px;
+        }
+
+        header img {
+            height: 90px;
+        }
+
+        header h1 {
+            flex: 1;
+            text-align: center;
+            margin: 0;
+        }
+
+        header button {
+            background-color: #fff;
+            color: #007BFF;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        form {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        form label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        form input,
+        form textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .btn-submit {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 4px;
+        }
+
+        form select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        /*=======================    2 form visual ============*/
+        /* ===== MODAL CONFIRMAÇÃO (ÚNICO CSS) ===== */
+        #modalConfirmacao {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+        }
+
+        #modalConfirmacao .modal-box {
+            background: #fff;
+            width: 600px;
+            max-width: calc(100% - 40px);
+            margin: 100px auto;
+            padding: 40px;
+            border-radius: 8px;
+        }
+
+        #dadosFormulario ul {
+            font-size: 14px;
+            line-height: 1.6;
+            padding-left: 18px;
+        }
+
+        #btnConfirmar {
+            background: #007BFF;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            margin-right: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        #btnCancelar {
+            background: #FF0000;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+
+        /* Lista de dados no modal */
+        #dadosFormulario ul {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Botão Confirmar */
+        #btnConfirmar {
+            background: #007BFF;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            margin-right: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /* Botão Cancelar */
+        #btnCancelar {
+            background: #FF0000;
+            /* Vermelho */
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            /* Bordas arredondadas */
+            cursor: pointer;
+        }
+
+
+
+        label[for="status"],
+        #status {
+            display: block;
+            /* mantém igual aos outros campos */
+            margin-left: 0;
+            /* remove deslocamento */
+        }
+
+        #status {
+            width: 102%;
+            /* igual aos outros inputs */
+        }
+
+        label[for="modalidade"],
+        #modalidade {
+            display: block;
+            /* mantém igual aos outros campos */
+            margin-left: 0;
+            /* remove deslocamento */
+        }
+
+        #modalidade {
+            width: 102%;
+            /* igual aos outros inputs */
+        }
+
+
+
+        .linha {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            white-space: nowrap;
+            /* impede quebra de linha */
+        }
+
+        .opcao {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            /* texto ↔ checkbox */
+            cursor: pointer;
+            /* melhor UX */
+        }
+
+        .titulo {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <img src="/static/imagens/logo2.png" alt="Logo">
+        <h1>Cadastro de Correspondente Caixa</h1>
+        <button onclick="window.history.back()">Voltar</button>
+    </header>
+
+
+    <form id="meuFormulario" action="/api/create/cca" method="POST">
+        <label>Correspondente:</label>
+        <input type="text" name="correspondente" required>
+
+        <label>Código CCA:</label>
+        <input type="text" name="CCA" id="cca" maxlength="7" required>
+
+        <label>Principal Contato:</label>
+        <input type="text" name="principal_contato" maxlength="20">
+
+        <label>Número:</label>
+        <input type="text" name="NUMERO_CONTATO" id="numero_de_contato" maxlength="11" inputmode="numeric" required>
+
+        <button type="submit" class="btn-submit">Salvar CCA</button>
+    </form>
+
+    <div id="modalConfirmacao" class="modal">
+        <div class="modal-box">
+            <h2>Confirme os Dados</h2>
+            <div id="dadosFormulario"></div>
+            <button id="btnConfirmar">Confirmar</button>
+            <button id="btnCancelar">Cancelar</button>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('meuFormulario');
+        const modal = document.getElementById('modalConfirmacao');
+        const dadosDiv = document.getElementById('dadosFormulario');
+        const btnConfirmar = document.getElementById('btnConfirmar');
+        const btnCancelar = document.getElementById('btnCancelar');
+      
+        const ccaInput = document.getElementById('cca');
+        const numInput = document.getElementById('numero_de_contato');
+      
+        // Máscara CCA: 12345-6 (6 dígitos)
+        ccaInput.addEventListener('input', function (e) {
+          let value = e.target.value.replace(/\D/g, '');
+          if (value.length > 6) value = value.slice(0, 6);
+          if (value.length > 5) value = value.replace(/(\d{5})(\d)/, '$1-$2');
+          e.target.value = value;
+        });
+      
+        // Apenas números no contato
+        numInput.addEventListener('input', function (e) {
+          e.target.value = e.target.value.replace(/\D/g, '').slice(0, 11);
+        });
+      
+        // Quando clicar em "Salvar CCA" -> valida -> abre modal
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+      
+          // Limpa validações anteriores
+          ccaInput.setCustomValidity('');
+      
+          // valida CCA: 6 dígitos
+          const ccaVal = ccaInput.value.replace(/\D/g, '');
+          if (ccaVal.length !== 6) {
+            ccaInput.setCustomValidity('CCA deve conter 6 dígitos.');
+          }
+      
+          if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+          }
+      
+          // Monta modal com dados formatados (sem enviar ainda)
+          const formData = new FormData(form);
+          let htmlDados = '<ul>';
+      
+          formData.forEach((valor, chave) => {
+            const labelCampo = chave.replace(/\_/g, " ").toUpperCase();
+            let v = (valor || '').toString().trim();
+            let valorFormatado = v;
+      
+            if (chave === "CCA") {
+              const only = v.replace(/\D/g, '');
+              if (only.length === 6) valorFormatado = only.replace(/^(\d{5})(\d{1})$/, "$1-$2");
+            }
+      
+            if (chave === "NUMERO_CONTATO") {
+              const only = v.replace(/\D/g, '');
+              if (only.length === 11) valorFormatado = only.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
+              if (only.length === 10) valorFormatado = only.replace(/^(\d{2})(\d{4})(\d{4})$/, "($1) $2-$3");
+            }
+      
+            htmlDados += `
+              <li>
+                <strong>${labelCampo}:</strong>
+                <span style="font-weight:bold;">${valorFormatado}</span>
+              </li>`;
+          });
+      
+          htmlDados += '</ul>';
+          dadosDiv.innerHTML = htmlDados;
+          modal.style.display = 'block';
+        });
+      
+        // Confirmar -> envia API JSON
+        btnConfirmar.addEventListener('click', async () => {
+          // trava o botão para evitar duplo clique
+          btnConfirmar.disabled = true;
+          btnConfirmar.textContent = 'Enviando...';
+      
+          try {
+            const correspondente = document.querySelector('input[name="correspondente"]').value.trim();
+            const cca = document.querySelector('input[name="CCA"]').value.replace(/\D/g, '').trim();
+            const contato = document.querySelector('input[name="principal_contato"]').value.trim();
+            const numero = document.querySelector('input[name="NUMERO_CONTATO"]').value.replace(/\D/g, '').trim();
+      
+            // Payload do jeito que seu backend espera (request.json)
+            const payload = {
+              CORRESPONDENTE: correspondente,
+              CCA: cca,
+              CONTATO: contato,
+              NUMERO_CONTATO: numero
+            };
+      
+            const resp = await fetch('/api/create/cca', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+      
+            if (!resp.ok) {
+              // tenta ler a resposta do backend (caso ele envie erros)
+              let msg = 'Falha ao salvar no banco.';
+              try {
+                const data = await resp.json();
+                if (data?.mensagem) msg = data.mensagem;
+                if (data?.erros?.length) msg = data.erros.join('\n');
+              } catch {}
+              throw new Error(msg);
+            }
+      
+            // Sucesso
+            modal.style.display = 'none';
+            alert('✅ Cadastro salvo com sucesso!');
+            form.reset();
+      
+          } catch (err) {
+            console.error(err);
+            alert('❌ ' + (err.message || 'Erro ao salvar os dados.'));
+          } finally {
+            btnConfirmar.disabled = false;
+            btnConfirmar.textContent = 'Confirmar';
+          }
+        });
+      
+        // Cancelar -> fecha modal
+        btnCancelar.addEventListener('click', () => {
+          modal.style.display = 'none';
+        });
+      </script>
+
+</body>
+
+</html>

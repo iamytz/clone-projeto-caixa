@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -111,14 +112,17 @@
             display: flex;
             align-items: center;
             gap: 40px;
-            white-space: nowrap; /* impede quebra de linha */
+            white-space: nowrap;
+            /* impede quebra de linha */
         }
 
         .opcao {
             display: flex;
             align-items: center;
-            gap: 8px; /* texto ↔ checkbox */
-            cursor: pointer; /* melhor UX */
+            gap: 8px;
+            /* texto ↔ checkbox */
+            cursor: pointer;
+            /* melhor UX */
         }
 
         .titulo {
@@ -153,487 +157,600 @@
         }
     </style>
 </head>
+
 <body>
-<header>
-    <img src="/static/imagens/logo2.png" alt="Logo">
-    <h1>Editar Cliente</h1>
-    <button type="button" onclick="voltar()">Voltar</button>
-</header>
+    <header>
+        <img src="/static/imagens/logo2.png" alt="Logo">
+        <h1>Editar Cliente</h1>
+        <button type="button" onclick="voltar()">Voltar</button>
+    </header>
 
-<form id="formEditarCliente">
-    <label>Data Entrada:</label>
-    <input type="datetime-local" name="DATA_ENTRADA" id="dataEntrada">
+    <form id="formEditarCliente">
+        <label>Data Entrada:</label>
+        <input type="date" name="dataEntrada" id="dataEntrada">
 
-    <label>Proponente:</label>
-    <input type="text" name="PROPONENTE" id="proponente" required>
+        <label>Proponente:</label>
+        <input type="text" name="proponente" id="proponente" required>
 
-    <label>CPF:</label>
-    <!-- CPF NÃO editável na edição -->
-    <input type="text" id="cpf" name="CPF" maxlength="14" readonly>
+        <label>CPF:</label>
+        <!-- CPF NÃO editável na edição -->
+        <input type="text" id="cpf" name="CPF" maxlength="14" readonly>
 
-    <label>CCA:</label>
-    <input type="text" id="cca" name="CCA" maxlength="7" required>
+        <label>CCA:</label>
+        <input type="text" id="cca" name="CCA" maxlength="7" required>
 
-    <label>Número do Contrato:</label>
-    <input type="text" id="numContrato" name="NUM_CONTRATO" maxlength="16"
-           inputmode="numeric" autocomplete="off" spellcheck="false">
+        <label>Número do Contrato:</label>
+        <input type="text" id="numContrato" name="NUM_CONTRATO" maxlength="16" inputmode="numeric" autocomplete="off"
+            spellcheck="false">
 
-    <label>Valor Financiado:</label>
-    <input type="text" id="valorFinanciado" name="VALOR_FINANCIADO" required>
+        <label>Valor Financiado:</label>
+        <input type="text" id="valorFinanciado" name="VALOR_FINANCIADO" required>
 
-    <label>Status:</label>
-    <select id="status" name="STATUS">
-        <option value="">Selecione...</option>
-        <option value="assinado">Assinado</option>
-        <option value="negociado">Negociado</option>
-        <option value="em_negociacao">Em Negociação</option>
-    </select>
+        <label>Status:</label>
+        <select id="status" name="status">
+            <option value="">Selecione...</option>
+            <option value="assinado">Assinado</option>
+            <option value="negociado">Negociado</option>
+            <option value="em_negociacao">Em Negociação</option>
+        </select>
 
-    <label>Modalidade:</label>
-    <select id="modalidade" name="MODALIDADE">
-        <option value="">Selecione...</option>
-        <option value="SBPE - NOVO">SBPE - NOVO</option>
-        <option value="CCSBPE - NOVO">CCSBPE - NOVO</option>
-        <option value="SBPE - USADO">SBPE - USADO</option>
-        <option value="SBPE - LOTE">SBPE - LOTE</option>
-        <option value="SBPE - TERRENO CONSTRUÇÃO">SBPE - TERRENO CONSTRUÇÃO</option>
-        <option value="SBPE - EMPREENDIMENTO">SBPE - EMPREENDIMENTO</option>
-        <option value="SBPE - COMERCIAL USADO">SBPE - COMERCIAL USADO</option>
-        <option value="SBPE - CONSTRUÇÃO">SBPE - CONSTRUÇÃO</option>
-        <option value="MCMV - NOVO">MCMV - NOVO</option>
-        <option value="MCMV - USADO">MCMV - USADO</option>
-        <option value="MCMV - CONSTRUÇÃO">MCMV - CONSTRUÇÃO</option>
-        <option value="MCMV - NOVO C.MEDIA">MCMV - NOVO C.MEDIA</option>
-        <option value="MCMV - NOVO C. MEDIA">MCMV - NOVO C. MEDIA</option>
-        <option value="MCMV - FS">MCMV - FS</option>
-        <option value="MCMV - TERRENO E CONSTRUÇÃO">MCMV - TERRENO E CONSTRUÇÃO</option>
-        <option value="MCMV - empreendimento vila rio do ouro">MCMV - empreendimento vila rio do ouro</option>
-        <option value="PMCMV - Imóvel Usado Individual - Classe Média">PMCMV - Imóvel Usado Individual - Classe Média</option>
-        <option value="NPMCMV - FS">NPMCMV - FS</option>
-        <option value="FGTS - EMPREENDIMENTO">FGTS - EMPREENDIMENTO</option>
-        <option value="CIP">CIP</option>
-        <option value="CCSBPE - CONSTRUÇÃO">CCSBPE - CONSTRUÇÃO</option>
-    </select>
+        <label>Modalidade:</label>
+        <select id="modalidade" name="modalidade">
+            <option value="">Selecione...</option>
+            <option value="SBPE - NOVO">SBPE - NOVO</option>
+            <option value="CCSBPE - NOVO">CCSBPE - NOVO</option>
+            <option value="SBPE - USADO">SBPE - USADO</option>
+            <option value="SBPE - LOTE">SBPE - LOTE</option>
+            <option value="SBPE - TERRENO CONSTRUÇÃO">SBPE - TERRENO CONSTRUÇÃO</option>
+            <option value="SBPE - EMPREENDIMENTO">SBPE - EMPREENDIMENTO</option>
+            <option value="SBPE - COMERCIAL USADO">SBPE - COMERCIAL USADO</option>
+            <option value="SBPE - CONSTRUÇÃO">SBPE - CONSTRUÇÃO</option>
+            <option value="MCMV - NOVO">MCMV - NOVO</option>
+            <option value="MCMV - USADO">MCMV - USADO</option>
+            <option value="MCMV - CONSTRUÇÃO">MCMV - CONSTRUÇÃO</option>
+            <option value="MCMV - NOVO C.MEDIA">MCMV - NOVO C.MEDIA</option>
+            <option value="MCMV - NOVO C. MEDIA">MCMV - NOVO C. MEDIA</option>
+            <option value="MCMV - FS">MCMV - FS</option>
+            <option value="MCMV - TERRENO E CONSTRUÇÃO">MCMV - TERRENO E CONSTRUÇÃO</option>
+            <option value="MCMV - empreendimento vila rio do ouro">MCMV - empreendimento vila rio do ouro</option>
+            <option value="PMCMV - Imóvel Usado Individual - Classe Média">PMCMV - Imóvel Usado Individual - Classe
+                Média</option>
+            <option value="NPMCMV - FS">NPMCMV - FS</option>
+            <option value="FGTS - EMPREENDIMENTO">FGTS - EMPREENDIMENTO</option>
+            <option value="CIP">CIP</option>
+            <option value="CCSBPE - CONSTRUÇÃO">CCSBPE - CONSTRUÇÃO</option>
+        </select>
 
-    <label>Reciprocidade:</label>
-    <input type="text" name="RECIPROCIDADE" id="reciprocidade">
+        <label>Reciprocidade:</label>
+        <input type="text" name="reciprocidade" id="reciprocidade">
 
-    <label>Interveniente Quitante:</label>
-    <input type="text" name="INTERVENIENTE_QUITANTE" id="intervenienteQuitante">
+        <label>Interveniente Quitante:</label>
+        <input type="text" name="INTERVENIENTE_QUITANTE" id="intervenienteQuitante">
 
-    <label>Data Devolução Garantia:</label>
-    <input type="datetime-local" name="DATA_DEV_GARATIA" id="dataDevGarantia">
+        <label>Data Devolução Garantia:</label>
+        <input type="date" name="DATA_DEV_GARATIA" id="dataDevGarantia">
 
-    <label>Observações:</label>
-    <textarea name="OBS" id="obs"></textarea>
+        <label>Observações:</label>
+        <textarea name="OBS" id="obs"></textarea>
 
-    <label>Nome Vendedor:</label>
-    <input type="text" name="NOME_VENDEDOR" id="nomeVendedor">
+        <label>Nome Vendedor:</label>
+        <input type="text" name="NOME_VENDEDOR" id="nomeVendedor">
 
-    <div class="linha">
-        <label class="opcao">
-            <span class="titulo">Conta Caixa</span>
-            <input type="checkbox" class="exclusivo" id="contaCaixa" value="Conta Caixa">
-        </label>
+        <div class="linha">
+            <label class="opcao">
+                <span class="titulo">Conta Caixa</span>
+                <input type="checkbox" class="exclusivo" id="contaCaixa" value="caixa">
+            </label>
 
-        <label class="opcao">
-            <span class="titulo">Outros Bancos</span>
-            <input type="checkbox" class="exclusivo" id="outrasContas" value="Outros Bancos">
-        </label>
+            <label class="opcao">
+                <span class="titulo">Outros Bancos</span>
+                <input type="checkbox" class="exclusivo" id="outrasContas" value="outros">
+            </label>
+        </div>
+
+        <div class="linha linha-conformidade">
+            <label class="opcao">
+                <span class="titulo">Conforme</span>
+                <input type="checkbox" class="exclusivo-conformidade" id="conforme" value="conforme">
+            </label>
+
+            <label class="opcao">
+                <span class="titulo">Não conforme</span>
+                <input type="checkbox" class="exclusivo-conformidade" id="naoConforme" value="naoConforme">
+            </label>
+        </div>
+
+        <label>Vendedor CPF/CNPJ:</label>
+        <input type="text" name="VENDEDOR_CPF_CNPJ" id="vendedorCpfCnpj">
+    </form>
+
+    <div class="buttons">
+        <button type="button" class="btn-primary" onclick="salvarCliente()">Salvar alterações</button>
+        <button type="button" class="btn-danger" onclick="abrirModalExcluir()">Excluir cliente</button>
+        <button type="button" class="btn-secondary" onclick="voltar()">Voltar</button>
     </div>
 
-    <label>Vendedor CPF/CNPJ:</label>
-    <input type="text" name="VENDEDOR_CPF_CNPJ" id="vendedorCpfCnpj">
-</form>
-
-<div class="buttons">
-    <button type="button" class="btn-primary" onclick="salvarCliente()">Salvar alterações</button>
-    <button type="button" class="btn-danger" onclick="abrirModalExcluir()">Excluir cliente</button>
-    <button type="button" class="btn-secondary" onclick="voltar()">Voltar</button>
-</div>
-
-<!-- Modal de confirmação para exclusão -->
-<div id="modalExcluir" class="modal">
-    <div class="modal-content">
-        <p id="mensagemExcluir"></p>
-        <div class="modal-buttons">
-            <button type="button" class="btn-danger" onclick="excluirCliente()">Sim, excluir</button>
-            <button type="button" class="btn-secondary" onclick="fecharModalExcluir()">Cancelar</button>
+    <!-- Modal de confirmação para exclusão -->
+    <div id="modalExcluir" class="modal">
+        <div class="modal-content">
+            <p id="mensagemExcluir"></p>
+            <div class="modal-buttons">
+                <button type="button" class="btn-danger" onclick="excluirCliente()">Sim, excluir</button>
+                <button type="button" class="btn-secondary" onclick="fecharModalExcluir()">Cancelar</button>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-    // =============== Máscaras (baseado no cadastro.html) =================
 
-    function apenasDigitos(str) {
-        return (str || '').replace(/\D/g, '');
-    }
 
-    // CPF: 000.000.000-00
-    function aplicarMascaraCPF(input) {
-        let value = apenasDigitos(input.value);
-        if (value.length > 11) value = value.slice(0, 11);
 
-        if (value.length <= 3) {
-            input.value = value;
-        } else if (value.length <= 6) {
-            input.value = value.replace(/(\d{3})(\d+)/, '$1.$2');
-        } else if (value.length <= 9) {
-            input.value = value.replace(/(\d{3})(\d{3})(\d+)/, '$1.$2.$3');
-        } else {
-            input.value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+
+    <script>
+        // =============== Máscaras (baseado no cadastro.html) =================
+
+        function apenasDigitos(str) {
+            return (str || '').replace(/\D/g, '');
         }
-    }
 
-    // CCA: 0000-0
-    function aplicarMascaraCCA(input) {
-        let value = apenasDigitos(input.value);
-        if (value.length > 5) value = value.slice(0, 5);
-        if (value.length > 4) value = value.replace(/(\d{4})(\d)/, '$1-$2');
-        input.value = value;
-    }
+        // CPF: 000.000.000-00
+        function aplicarMascaraCPF(input) {
+            let value = apenasDigitos(input.value);
+            if (value.length > 11) value = value.slice(0, 11);
 
-    // Número do contrato: x.xxxx.xxxxxxx-x (13 dígitos)
-    function mascararContrato(digitos) {
-        const p1 = digitos.slice(0, 1);
-        const p2 = digitos.slice(1, 5);
-        const p3 = digitos.slice(5, 12);
-        const p4 = digitos.slice(12, 13);
-        let out = p1;
-        if (p2) out += '.' + p2;
-        if (p3) out += '.' + p3;
-        if (p4) out += '-' + p4;
-        return out;
-    }
-
-    function contarDigitosAtePosicao(masked, caretPos) {
-        let count = 0;
-        for (let i = 0; i < Math.min(caretPos, masked.length); i++) {
-            if (/\d/.test(masked[i])) count++;
-        }
-        return count;
-    }
-
-    function posicaoAposNDigitos(masked, n) {
-        if (n <= 0) return 0;
-        let count = 0;
-        for (let i = 0; i < masked.length; i++) {
-            if (/\d/.test(masked[i])) {
-                count++;
-                if (count === n) return i + 1;
+            if (value.length <= 3) {
+                input.value = value;
+            } else if (value.length <= 6) {
+                input.value = value.replace(/(\d{3})(\d+)/, '$1.$2');
+            } else if (value.length <= 9) {
+                input.value = value.replace(/(\d{3})(\d{3})(\d+)/, '$1.$2.$3');
+            } else {
+                input.value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
             }
         }
-        return masked.length;
-    }
 
-    function formatarContratoComCursor(e) {
-        const input = e.target;
-        const valorAntigo = input.value;
-        const caretAntigo = input.selectionStart ?? valorAntigo.length;
-
-        const qtdDigitosEsquerda = contarDigitosAtePosicao(valorAntigo, caretAntigo);
-
-        const digitos = apenasDigitos(valorAntigo).slice(0, 13);
-        const valorNovo = mascararContrato(digitos);
-
-        if (input.value !== valorNovo) input.value = valorNovo;
-        const caretNovo = posicaoAposNDigitos(valorNovo, qtdDigitosEsquerda);
-        try {
-            input.setSelectionRange(caretNovo, caretNovo);
-        } catch (err) {}
-    }
-
-    // Valor Financiado: moeda (1.234,56) com base em centavos
-    function aplicarMascaraValor(input) {
-        let value = apenasDigitos(input.value);
-
-        if (value.length === 0) {
-            input.value = '';
-            return;
+        // CCA: 0000-0
+        function aplicarMascaraCCA(input) {
+            let value = apenasDigitos(input.value);
+            if (value.length > 6) value = value.slice(0, 6);
+            if (value.length > 5) value = value.replace(/(\d{5})(\d)/, '$1-$2');
+            input.value = value;
         }
 
-        if (value.length < 3) {
-            value = value.padStart(3, '0');
+        // Número do contrato: x.xxxx.xxxxxxx-x (13 dígitos)
+        function mascararContrato(digitos) {
+            const p1 = digitos.slice(0, 1);
+            const p2 = digitos.slice(1, 5);
+            const p3 = digitos.slice(5, 12);
+            const p4 = digitos.slice(12, 13);
+            let out = p1;
+            if (p2) out += '.' + p2;
+            if (p3) out += '.' + p3;
+            if (p4) out += '-' + p4;
+            return out;
         }
 
-        let inteiro = value.slice(0, -2);
-        let centavos = value.slice(-2);
-
-        inteiro = inteiro.replace(/^0+(?!$)/, '');
-        inteiro = inteiro.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-        let formatado = inteiro + ',' + centavos;
-        if (formatado.length > 22) {
-            formatado = formatado.slice(0, 22);
+        function contarDigitosAtePosicao(masked, caretPos) {
+            let count = 0;
+            for (let i = 0; i < Math.min(caretPos, masked.length); i++) {
+                if (/\d/.test(masked[i])) count++;
+            }
+            return count;
         }
 
-        input.value = formatado;
-    }
+        function posicaoAposNDigitos(masked, n) {
+            if (n <= 0) return 0;
+            let count = 0;
+            for (let i = 0; i < masked.length; i++) {
+                if (/\d/.test(masked[i])) {
+                    count++;
+                    if (count === n) return i + 1;
+                }
+            }
+            return masked.length;
+        }
 
-    // =============== Funções de utilidade =================
+        function formatarContratoComCursor(e) {
+            const input = e.target;
+            const valorAntigo = input.value;
+            const caretAntigo = input.selectionStart ?? valorAntigo.length;
 
-    function formatarCPF(digitos11) {
-        const v = apenasDigitos(digitos11);
-        if (v.length !== 11) return v;
-        return v.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-    }
+            const qtdDigitosEsquerda = contarDigitosAtePosicao(valorAntigo, caretAntigo);
 
-    function formatarCCA(digitos) {
-        const v = apenasDigitos(digitos);
-        if (v.length !== 5) return v;
-        return v.replace(/(\d{4})(\d)/, '$1-$2');
-    }
+            const digitos = apenasDigitos(valorAntigo).slice(0, 13);
+            const valorNovo = mascararContrato(digitos);
 
-    function formatarNumContrato(digitos) {
-        const v = apenasDigitos(digitos);
-        if (v.length !== 13) return v;
-        return mascararContrato(v);
-    }
+            if (input.value !== valorNovo) input.value = valorNovo;
+            const caretNovo = posicaoAposNDigitos(valorNovo, qtdDigitosEsquerda);
+            try {
+                input.setSelectionRange(caretNovo, caretNovo);
+            } catch (err) { }
+        }
 
-    function formatarValorCentsParaMoeda(centsStr) {
-        let valor = apenasDigitos(centsStr);
-        if (!valor) return '';
-        if (valor.length < 3) valor = valor.padStart(3, '0');
-        let inteiro = valor.slice(0, -2);
-        let centavos = valor.slice(-2);
-        inteiro = inteiro.replace(/^0+(?!$)/, '');
-        inteiro = inteiro.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-        return inteiro + ',' + centavos;
-    }
+        // Valor Financiado: moeda (1.234,56) com base em centavos
+        function aplicarMascaraValor(input) {
+            let value = apenasDigitos(input.value);
 
-    // =============== Carregar dados do cliente (como editar_cliente.html) =================
-
-    let cpfUrl = null;   // CPF sem máscara vindo da URL
-
-    async function carregarDadosCliente() {
-        try {
-            cpfUrl = window.location.pathname.split('/').pop(); // /buscar_cliente/edit/<cpf>
-            const response = await fetch(`/api/clientes/${cpfUrl}`);
-            if (!response.ok) {
-                alert('Erro ao buscar dados do cliente.');
+            if (value.length === 0) {
+                input.value = '';
                 return;
             }
-            const cliente = await response.json();
 
-            // Preenche campos
-            document.getElementById('dataEntrada').value = cliente.DATA_ENTRADA || '';
-            document.getElementById('proponente').value = cliente.PROPONENTE || '';
-            document.getElementById('cpf').value = formatarCPF(cliente.CPF || '');
-            document.getElementById('cca').value = formatarCCA(cliente.CCA || '');
-            document.getElementById('numContrato').value = formatarNumContrato(cliente.NUM_CONTRATO || '');
-            document.getElementById('valorFinanciado').value = formatarValorCentsParaMoeda(cliente.VALOR_FINANCIADO || '');
-            document.getElementById('reciprocidade').value = cliente.RECIPROCIDADE || '';
-            document.getElementById('intervenienteQuitante').value = cliente.INTERVENIENTE_QUITANTE || '';
-            document.getElementById('dataDevGarantia').value = cliente.DATA_DEV_GARATIA || '';
-            document.getElementById('obs').value = cliente.OBS || '';
-            document.getElementById('nomeVendedor').value = cliente.NOME_VENDEDOR || '';
-            document.getElementById('vendedorCpfCnpj').value = cliente.VENDEDOR_CPF_CNPJ || '';
-
-            // Status vem do banco em maiúsculo (ASSINADO, NEGOCIADO, EM_NEGOCIACAO)
-            if (cliente.STATUS) {
-                const statusVal = cliente.STATUS.toString().toLowerCase(); // "negociado" / "em_negociacao"
-                document.getElementById('status').value = statusVal;
+            if (value.length < 3) {
+                value = value.padStart(3, '0');
             }
 
-            // Modalidade: tenta bater com uma das opções
-            if (cliente.MODALIDADE) {
-                const selModalidade = document.getElementById('modalidade');
-                const valorBanco = cliente.MODALIDADE.toString().toUpperCase();
-                let encontrou = false;
-                for (const opt of selModalidade.options) {
-                    if (opt.value.toUpperCase() === valorBanco) {
-                        selModalidade.value = opt.value;
-                        encontrou = true;
-                        break;
+            let inteiro = value.slice(0, -2);
+            let centavos = value.slice(-2);
+
+            inteiro = inteiro.replace(/^0+(?!$)/, '');
+            inteiro = inteiro.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+            let formatado = inteiro + ',' + centavos;
+            if (formatado.length > 22) {
+                formatado = formatado.slice(0, 22);
+            }
+
+            input.value = formatado;
+        }
+
+        // =============== Funções de utilidade =================
+
+        function formatarCPF(digitos11) {
+            const v = apenasDigitos(digitos11);
+            if (v.length !== 11) return v;
+            return v.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        }
+
+        function formatarCCA(digitos) {
+            const v = apenasDigitos(digitos);
+            if (v.length !== 6) return v;
+            return v.replace(/(\d{5})(\d)/, '$1-$2');
+        }
+
+        function formatarNumContrato(digitos) {
+            const v = apenasDigitos(digitos);
+            if (v.length !== 13) return v;
+            return mascararContrato(v);
+        }
+
+        function formatarValorCentsParaMoeda(centsStr) {
+            let valor = apenasDigitos(centsStr);
+            if (!valor) return '';
+            if (valor.length < 3) valor = valor.padStart(3, '0');
+            let inteiro = valor.slice(0, -2);
+            let centavos = valor.slice(-2);
+            inteiro = inteiro.replace(/^0+(?!$)/, '');
+            inteiro = inteiro.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            return inteiro + ',' + centavos;
+        }
+
+        // =============== Carregar dados do cliente (como editar_cliente.html) =================
+
+        let cpfUrl = null;   // CPF sem máscara vindo da URL
+
+        async function carregarDadosCliente() {
+            try {
+                cpfUrl = window.location.pathname.split('/').pop(); // /buscar_cliente/edit/<cpf>
+                const response = await fetch(`/api/clientes/${cpfUrl}`);
+                if (!response.ok) {
+                    alert('Erro ao buscar dados do cliente.');
+                    return;
+                }
+                const cliente = await response.json();
+
+                // Preenche campos
+
+document.getElementById('dataEntrada').value = cliente.dataEntrada || '';
+document.getElementById('proponente').value = cliente.proponente || '';
+document.getElementById('cpf').value = formatarCPF(cliente.cpf || '');
+document.getElementById('cca').value = formatarCCA(cliente.cca || '');
+document.getElementById('numContrato').value = formatarNumContrato(cliente.numContrato || '');
+document.getElementById('valorFinanciado').value =
+    formatarValorCentsParaMoeda(cliente.valorFinanciado?.toString() || '');
+
+document.getElementById('reciprocidade').value = cliente.reciprocidade || '';
+document.getElementById('intervenienteQuitante').value = cliente.intervenienteQuitante || '';
+document.getElementById('dataDevGarantia').value = cliente.dataDevGarantia || '';
+document.getElementById('obs').value = cliente.obs || '';
+document.getElementById('nomeVendedor').value = cliente.nomeVendedor || '';
+document.getElementById('vendedorCpfCnpj').value = cliente.vendedorCpfCnpj || '';
+
+
+const statusBanco = cliente.status || '';
+
+if (statusBanco) {
+    document.getElementById('status').value =
+        statusBanco.toString().toLowerCase().trim();
+}
+
+                // Modalidade: tenta bater com uma das opções
+                if (cliente.modalidade) {
+                    const selModalidade = document.getElementById('modalidade');
+                    const valorBanco = cliente.modalidade.toString().toUpperCase();
+                    let encontrou = false;
+                    for (const opt of selModalidade.options) {
+                        if (opt.value.toUpperCase() === valorBanco) {
+                            selModalidade.value = opt.value;
+                            encontrou = true;
+                            break;
+                        }
+                    }
+                    if (!encontrou) {
+                        selModalidade.value = '';
                     }
                 }
-                if (!encontrou) {
-                    selModalidade.value = '';
+
+                const contaVal = (cliente.contaCaixa || '');
+                const cbCaixa = document.getElementById('contaCaixa');
+                const cbOutros = document.getElementById('outrasContas');
+                cbCaixa.checked = false;
+                cbOutros.checked = false;
+                if (contaVal.includes('caixa')) {
+                    cbCaixa.checked = true;
+                } else if (contaVal.trim() !== '') {
+                    cbOutros.checked = true;
                 }
-            }
 
-            // Conta Vendedor -> checkboxes
-            const contaVal = (cliente.CONTA_VENDEDOR || '').toUpperCase();
-            const cbCaixa = document.getElementById('contaCaixa');
-            const cbOutros = document.getElementById('outrasContas');
-            cbCaixa.checked = false;
-            cbOutros.checked = false;
-            if (contaVal.includes('CAIXA')) {
-                cbCaixa.checked = true;
-            } else if (contaVal.trim() !== '') {
-                cbOutros.checked = true;
-            }
+                // Conformidade -> checkboxes
+                const conformidadeVal = (cliente.conformidade || '').toString();
+                const cbConforme = document.getElementById('conforme');
+                const cbNao = document.getElementById('naoConforme');
 
-        } catch (err) {
-            console.error('Erro ao carregar cliente:', err);
-            alert('Erro ao carregar dados do cliente.');
-        }
-    }
+                if (cbConforme && cbNao) {
+                    cbConforme.checked = false;
+                    cbNao.checked = false;
 
-    // =============== Montar objeto para envio =================
-
-    function montarDadosParaEnvio() {
-        const dados = {
-            DATA_ENTRADA: document.getElementById('dataEntrada').value || null,
-            PROPONENTE: (document.getElementById('proponente').value || '').trim(),
-            CPF: apenasDigitos(document.getElementById('cpf').value || ''),
-            CCA: apenasDigitos(document.getElementById('cca').value || ''),
-            NUM_CONTRATO: apenasDigitos(document.getElementById('numContrato').value || ''),
-            VALOR_FINANCIADO: apenasDigitos(document.getElementById('valorFinanciado').value || ''),
-            STATUS: (document.getElementById('status').value || '').trim(),
-            MODALIDADE: (document.getElementById('modalidade').value || '').trim(),
-            RECIPROCIDADE: (document.getElementById('reciprocidade').value || '').trim(),
-            INTERVENIENTE_QUITANTE: (document.getElementById('intervenienteQuitante').value || '').trim(),
-            DATA_DEV_GARATIA: document.getElementById('dataDevGarantia').value || null,
-            OBS: (document.getElementById('obs').value || '').trim(),
-            NOME_VENDEDOR: (document.getElementById('nomeVendedor').value || '').trim(),
-            CONTA_VENDEDOR: '',
-            VENDEDOR_CPF_CNPJ: (document.getElementById('vendedorCpfCnpj').value || '').trim()
-        };
-
-        const cbCaixa = document.getElementById('contaCaixa');
-        const cbOutros = document.getElementById('outrasContas');
-        if (cbCaixa.checked) dados.CONTA_VENDEDOR = 'Conta Caixa';
-        else if (cbOutros.checked) dados.CONTA_VENDEDOR = 'Outros Bancos';
-
-        return dados;
-    }
-
-    // =============== Salvar (UPDATE) =================
-
-    async function salvarCliente() {
-        const dados = montarDadosParaEnvio();
-
-        // Validações básicas (sem exagero)
-        if (!dados.PROPONENTE) {
-            alert('Proponente é obrigatório.');
-            return;
-        }
-        if (dados.CPF.length !== 11) {
-            alert('CPF inválido (precisa ter 11 dígitos).');
-            return;
-        }
-        if (dados.CCA && dados.CCA.length !== 5) {
-            alert('CCA deve ter 5 dígitos (formato 0000-0).');
-            return;
-        }
-        if (dados.NUM_CONTRATO && dados.NUM_CONTRATO.length !== 13) {
-            alert('Número do Contrato deve ter 13 dígitos.');
-            return;
-        }
-
-        try {
-            const resp = await fetch(`/atualizar_cliente/cpf=${cpfUrl}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dados)
-            });
-
-            if (!resp.ok) {
-                const erro = await resp.json().catch(() => null);
-                console.error('Erro ao atualizar:', erro || resp.statusText);
-                alert('Erro ao atualizar cliente.');
-                return;
-            }
-
-            alert('Cliente atualizado com sucesso!');
-            window.location.href = '/buscar_cliente';
-
-        } catch (err) {
-            console.error('Erro na requisição de atualização:', err);
-            alert('Erro ao atualizar cliente (falha de rede).');
-        }
-    }
-
-    // =============== Exclusão =================
-
-    function abrirModalExcluir() {
-        const proponente = document.getElementById('proponente').value || '';
-        const cpfValor = apenasDigitos(document.getElementById('cpf').value || '');
-        const cpfMasc = formatarCPF(cpfValor);
-        const msg = `Você realmente deseja excluir o cliente ${proponente} do CPF ${cpfMasc}?`;
-        document.getElementById('mensagemExcluir').textContent = msg;
-        document.getElementById('modalExcluir').style.display = 'flex';
-    }
-
-    function fecharModalExcluir() {
-        document.getElementById('modalExcluir').style.display = 'none';
-    }
-
-    async function excluirCliente() {
-        const cpfLimpo = apenasDigitos(document.getElementById('cpf').value || '');
-        try {
-            const resp = await fetch(`/excluir_cliente/cpf=${cpfLimpo}`, {
-                method: 'DELETE'
-            });
-            if (!resp.ok) {
-                alert('Erro ao excluir cliente.');
-                return;
-            }
-            window.location.href = '/homepage?status=excluido';
-        } catch (err) {
-            console.error('Erro na requisição de exclusão:', err);
-            alert('Erro ao excluir cliente (falha de rede).');
-        }
-    }
-
-    // =============== Navegação =================
-
-    function voltar() {
-        window.history.back();
-    }
-
-    // Expõe funções no escopo global para usar nos onclick do HTML
-    window.salvarCliente = salvarCliente;
-    window.voltar = voltar;
-    window.abrirModalExcluir = abrirModalExcluir;
-    window.fecharModalExcluir = fecharModalExcluir;
-    window.excluirCliente = excluirCliente;
-
-    // =============== Inicialização =================
-
-    document.addEventListener('DOMContentLoaded', () => {
-        // Máscaras em tempo real
-        const cpfInput = document.getElementById('cpf');    // aqui está readonly, então máscara só na carga
-        const ccaInput = document.getElementById('cca');
-        const contratoInput = document.getElementById('numContrato');
-        const valorInput = document.getElementById('valorFinanciado');
-
-        if (ccaInput) {
-            ccaInput.addEventListener('input', e => aplicarMascaraCCA(e.target));
-        }
-
-        if (contratoInput) {
-            contratoInput.addEventListener('input', formatarContratoComCursor);
-            contratoInput.addEventListener('paste', () => {
-                setTimeout(() => formatarContratoComCursor({ target: contratoInput }), 0);
-            });
-            contratoInput.addEventListener('blur', () => {
-                formatarContratoComCursor({ target: contratoInput });
-            });
-        }
-
-        if (valorInput) {
-            valorInput.addEventListener('input', e => aplicarMascaraValor(e.target));
-        }
-
-        // Checkboxes exclusivos (Conta Caixa / Outras Contas)
-        const caixas = document.querySelectorAll('.exclusivo');
-        caixas.forEach(c => {
-            c.addEventListener('change', () => {
-                if (c.checked) {
-                    caixas.forEach(o => {
-                        if (o !== c) o.checked = false;
-                    });
+                    if (conformidadeVal === 'conforme') cbConforme.checked = true;
+                    else if (conformidadeVal === 'naoConforme' || conformidadeVal === 'NAO conforme') cbNao.checked = true;
                 }
-            });
+
+            } catch (err) {
+                console.error('Erro ao carregar cliente:', err);
+                alert('Erro ao carregar dados do cliente.');
+            }
+        }
+
+        // =============== Montar objeto para envio =================
+
+// Substitua a função montarDadosParaEnvio() por esta:
+
+function montarDadosParaEnvio() {
+    const dados = {
+        dataEntrada: document.getElementById('dataEntrada').value || "",
+        proponente: document.getElementById('proponente').value.trim(),
+        cpf: apenasDigitos(document.getElementById('cpf').value || ''),  // Mudei de CCA para cpf
+        cca: apenasDigitos(document.getElementById('cca').value || ''),
+        numContrato: apenasDigitos(document.getElementById('numContrato').value || ''),
+        valorFinanciado: apenasDigitos(document.getElementById('valorFinanciado').value || ''),
+        status: document.getElementById('status').value || "",
+        modalidade: document.getElementById('modalidade').value || "",
+        reciprocidade: document.getElementById('reciprocidade').value || "",
+        intervenienteQuitante: document.getElementById('intervenienteQuitante').value || "",
+        dataDevGarantia: document.getElementById('dataDevGarantia').value || "",
+        obs: document.getElementById('obs').value || "",
+        nomeVendedor: document.getElementById('nomeVendedor').value || "",
+        vendedorCpfCnpj: document.getElementById('vendedorCpfCnpj').value || "",
+        contaCaixa: "",
+        conformidade: ""
+    };
+
+    if (document.getElementById('contaCaixa').checked) {
+        dados.contaCaixa = "caixa";
+    } else if (document.getElementById('outrasContas').checked) {
+        dados.contaCaixa = "outros";
+    }
+
+    // Conformidade
+    if (document.getElementById('conforme').checked) {
+        dados.conformidade = "conforme";
+    } else if (document.getElementById('naoConforme').checked) {
+        dados.conformidade = "naoConforme";
+    }
+
+    return dados;
+}
+
+// Substitua a função salvarCliente() por esta:
+
+async function salvarCliente() {
+    const dados = montarDadosParaEnvio();
+
+    // Validações
+    if (!dados.proponente) {
+        alert('Proponente é obrigatório.');
+        return;
+    }
+
+    if (dados.cpf.length !== 11) {
+        alert('CPF inválido (precisa ter 11 dígitos).');
+        return;
+    }
+
+    if (dados.cca && dados.cca.length !== 6) {
+        alert('CCA deve ter 6 dígitos (formato 00000-0).');
+        return;
+    }
+
+    if (dados.numContrato && dados.numContrato.length !== 13) {
+        alert('Número do Contrato deve ter 13 dígitos.');
+        return;
+    }
+
+    // CORREÇÃO: Use o CPF que já está na variável global cpfUrl
+    const cpfParaEnvio = cpfUrl || apenasDigitos(document.getElementById('cpf').value);
+
+    console.log('Enviando dados:', dados); // Para debug
+    console.log('CPF:', cpfParaEnvio);
+
+    try {
+        const resp = await fetch(`/api/atualizar_cliente/${cpfParaEnvio}`, {  // CORREÇÃO DA URL
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dados)
         });
 
-        // Carregar dados do cliente a partir do CPF na URL
-        carregarDadosCliente();
+        if (!resp.ok) {
+            const texto = await resp.text();
+            console.error('Resposta erro:', texto);
+            alert(`Erro ao atualizar cliente: ${resp.status}`);
+            return;
+        }
+
+        const resultado = await resp.json();
+        alert(resultado.message || 'Cliente atualizado com sucesso!');
+        window.location.href = '/buscar_cliente';
+
+    } catch (err) {
+        console.error('Erro na requisição:', err);
+        alert('Erro ao atualizar cliente (falha de rede). Verifique se o servidor está rodando.');
+    }
+}
+
+        // =============== Exclusão =================
+
+        function abrirModalExcluir() {
+            const proponente = document.getElementById('proponente').value || '';
+            const cpfValor = apenasDigitos(document.getElementById('cpf').value || '');
+            const cpfMasc = formatarCPF(cpfValor);
+            const msg = `Você realmente deseja excluir o cliente ${proponente} do CPF ${cpfMasc}?`;
+            document.getElementById('mensagemExcluir').textContent = msg;
+            document.getElementById('modalExcluir').style.display = 'flex';
+        }
+
+        function fecharModalExcluir() {
+            document.getElementById('modalExcluir').style.display = 'none';
+        }
+
+        async function excluirCliente() {
+            const cpfLimpo = apenasDigitos(document.getElementById('cpf').value || '');
+            try {
+                const resp = await fetch(`/excluir_cliente/cpf=${cpfLimpo}`, {
+                    method: 'DELETE'
+                });
+                if (!resp.ok) {
+                    alert('Erro ao excluir cliente.');
+                    return;
+                }
+                window.location.href = '/homepage?status=excluido';
+            } catch (err) {
+                console.error('Erro na requisição de exclusão:', err);
+                alert('Erro ao excluir cliente (falha de rede).');
+            }
+        }
+
+        // =============== Navegação =================
+
+        function voltar() {
+            window.history.back();
+        }
+
+        // Expõe funções no escopo global para usar nos onclick do HTML
+        window.salvarCliente = salvarCliente;
+        window.voltar = voltar;
+        window.abrirModalExcluir = abrirModalExcluir;
+        window.fecharModalExcluir = fecharModalExcluir;
+        window.excluirCliente = excluirCliente;
+
+        // =============== Inicialização =================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Máscaras em tempo real
+            const cpfInput = document.getElementById('cpf');    // aqui está readonly, então máscara só na carga
+            const ccaInput = document.getElementById('cca');
+            const contratoInput = document.getElementById('numContrato');
+            const valorInput = document.getElementById('valorFinanciado');
+
+            if (ccaInput) {
+                ccaInput.addEventListener('input', e => aplicarMascaraCCA(e.target));
+            }
+
+            if (contratoInput) {
+                contratoInput.addEventListener('input', formatarContratoComCursor);
+                contratoInput.addEventListener('paste', () => {
+                    setTimeout(() => formatarContratoComCursor({ target: contratoInput }), 0);
+                });
+                contratoInput.addEventListener('blur', () => {
+                    formatarContratoComCursor({ target: contratoInput });
+                });
+            }
+
+            if (valorInput) {
+                valorInput.addEventListener('input', e => aplicarMascaraValor(e.target));
+            }
+
+            // Checkboxes exclusivos (Conta Caixa / Outras Contas)
+            const caixas = document.querySelectorAll('.exclusivo');
+            caixas.forEach(c => {
+                c.addEventListener('change', () => {
+                    if (c.checked) {
+                        caixas.forEach(o => {
+                            if (o !== c) o.checked = false;
+                        });
+                    }
+                });
+            });
+
+            // Checkboxes exclusivos (Conformidade)
+            const conformes = document.querySelectorAll('.exclusivo-conformidade');
+            conformes.forEach(c => {
+                c.addEventListener('change', () => {
+                    if (c.checked) {
+                        conformes.forEach(o => {
+                            if (o !== c) o.checked = false;
+                        });
+                    }
+                });
+            });
+
+            // (Opcional) função utilitária
+            function obterConformidadeSelecionada() {
+                const cbConforme = document.getElementById('conforme');
+                const cbNao = document.getElementById('naoConforme');
+                if (cbConforme.checked) return 'conforme';
+                if (cbNao.checked) return 'naoConforme';
+                return '';
+            }
+
+            // Carregar dados do cliente a partir do CPF na URL
+            carregarDadosCliente();
+        });
+    </script>
+
+<script>
+    const ccaInput = document.getElementById("cca");
+
+    let timeoutCCA = null;
+
+    ccaInput.addEventListener("input", () => {
+      const ccaVal = ccaInput.value.replace(/\D/g, "");
+
+      // Limpa erro enquanto digita
+      ccaInput.setCustomValidity("");
+
+      // Só valida quando tiver 6 dígitos
+      if (ccaVal.length !== 6) return;
+
+      // Pequeno delay para não chamar API toda tecla
+      clearTimeout(timeoutCCA);
+      timeoutCCA = setTimeout(() => {
+        fetch(`/api/validar-cca/${ccaVal}`)
+          .then(res => res.json())
+          .then(data => {
+            if (!data) {
+              ccaInput.setCustomValidity("CCA inválido ou inexistente.");
+              ccaInput.reportValidity(); // 🔥 mostra o balão
+            } else {
+              ccaInput.setCustomValidity(""); // ✅ CCA válido
+            }
+          })
+          .catch(() => {
+            ccaInput.setCustomValidity("Erro ao validar o CCA.");
+            ccaInput.reportValidity();
+          });
+      }, 300);
     });
-</script>
+    </script>
 
 </body>
+
 </html>

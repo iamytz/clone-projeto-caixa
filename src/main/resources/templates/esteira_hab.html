@@ -157,9 +157,14 @@
 
 
     <div class="filters">
-        <label>CCA: <input type="text" id="cca"></label>
+        <label>CCA: <input type="text" id="cca"></input></label>
+
         <label><input type="checkbox" class="status" value="SBPE"> SBPE</label>
         <label><input type="checkbox" class="status" value="MCMV"> MCMV</label>
+
+        <label><input type="checkbox" class="conformidade" value="CONFORME"> CONFORME</label>
+        <label><input type="checkbox" class="conformidade" value="NAO_CONFORME"> NÃO CONFORME</label>
+
         <button onclick="loadData()">Filtrar</button>
     </div>
 
@@ -168,10 +173,11 @@
             <tr>
                 <th>DATA DE ENTRADA</th>
                 <th>PROPONENTE</th>
-                <th>CPF    </th>
-                <th>CCA    </th>
+                <th>CPF </th>
+                <th>CCA </th>
                 <th>N° CONTRATO</th>
                 <th>MODALIDADE</th>
+                <th>CONFORMIDADE</th>
                 <th>VALOR FINANCIADO</th>
             </tr>
         </thead>
@@ -182,35 +188,42 @@
 
     <script>
 
-function getSelectedStatuses() {
-  return Array.from(document.querySelectorAll('.status:checked')).map(cb => cb.value);
-}
-function getCCA() {
-  const input = document.getElementById('cca');
-  let cca = (input.value || '').replace(/\D/g, '');
-  input.value = cca; // mantém apenas números
-  return cca;
-}
+        function getSelectedStatuses() {
+            return Array.from(document.querySelectorAll('.status:checked')).map(cb => cb.value);
+        }
+        function getSelectedConformidades() {
+            return Array.from(document.querySelectorAll('.conformidade:checked')).map(cb => cb.value);
+        }
 
-async function loadData() {
-  const cca = getCCA();
-  const statuses = getSelectedStatuses(); // ex.: ["SBPE","MCMV"]
 
-  const payload = { cca, statuses };
+        function getCCA() {
+            const input = document.getElementById('cca');
+            let cca = (input.value || '').replace(/\D/g, '');
+            input.value = cca; // mantém apenas números
+            return cca;
+        }
 
-  try {
-    const res = await fetch('/get_data2', {          // <<< trocado para get_data2
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    const data = await res.json();
-    // Como o filtro já vem do backend, não precisamos mais filtrar aqui
-    renderTable(data);
-  } catch (err) {
-    console.error('Erro ao buscar dados:', err);
-  }
-}
+        async function loadData() {
+            const cca = getCCA();
+            const statuses = getSelectedStatuses();        // ["SBPE","MCMV"]
+            const conformidades = getSelectedConformidades(); // ["CONFORME","NAO_CONFORME"]
+
+            const payload = { cca, statuses, conformidades };
+            console.log('JSON enviado para /api/get_data2:', payload);
+
+            try {
+                const res = await fetch('/api/get_data2', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+                renderTable(data);
+            } catch (err) {
+                console.error('Erro ao buscar dados:', err);
+            }
+        }
 
 
 
@@ -259,12 +272,22 @@ async function loadData() {
                 return isNaN(date) ? dateStr : date.toLocaleDateString('pt-BR');
             }
 
+
             function formatCCA(cca) {
                 if (!cca) return '';
                 cca = String(cca).replace(/\D/g, '');
-                return cca.replace(/(\d{4})(\d{1})/, '$1-$2');
+                if (cca.length < 2) return cca;
+                return cca.slice(0, -1) + '-' + cca.slice(-1);
             }
 
+            function formatConformidade(conformidade) {
+                if (!conformidade) return '';
+                if (conformidade == "CONFORME") {
+                    return "CONFORME";
+                } else {
+                    return "NÃO CONFORME";
+                }
+            }
 
 
 
@@ -279,6 +302,7 @@ async function loadData() {
                 <td>${formatCCA(row.CCA)}</td>
                 <td>${formatNumContrato(row.NUM_CONTRATO)}</td>
                 <td>${row.MODALIDADE ?? ''}</td>
+                <td>${formatConformidade(row.CONFORMIDADE)}</td>
                 <td>R$ ${valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
             </tr>`;
                 tbody.innerHTML += tr;
@@ -298,29 +322,25 @@ async function loadData() {
 
         // Carrega inicial
 
+
         document.addEventListener('DOMContentLoaded', () => {
             const ccaInput = document.getElementById('cca');
+            let debounceTimer;
 
-            // Limita apenas números
             ccaInput.addEventListener('input', () => {
-                ccaInput.value = (ccaInput.value || '').replace(/\D/g, '');
-                loadData(); // Atualiza tabela a cada digito
+                ccaInput.value = ccaInput.value.replace(/\D/g, '');
+
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    loadData();
+                }, 300);
             });
 
-            // Também podemos manter o botão funcionando
             loadData();
         });
 
 
-        let debounceTimer;
-        ccaInput.addEventListener('input', () => {
-            ccaInput.value = (ccaInput.value || '').replace(/\D/g, '');
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(() => {
-                loadData();
-            }, 300); // espera 300ms após parar de digitar
-        });
-        
+
 
 
 
