@@ -146,7 +146,7 @@
 
     <header>
         <div style="display:flex; align-items:center; gap:15px; flex:1;">
-            <img src="/static/imagens/logo2.png" alt="Logo">
+            <img th:src="@{/img/logo2.png}" alt="Logo">
         </div>
         <h1 style="flex:2; text-align:center;">Esteira Habitação</h1>
         <div style="flex:1; display:flex; justify-content:flex-end;">
@@ -162,8 +162,8 @@
         <label><input type="checkbox" class="status" value="SBPE"> SBPE</label>
         <label><input type="checkbox" class="status" value="MCMV"> MCMV</label>
 
-        <label><input type="checkbox" class="conformidade" value="CONFORME"> CONFORME</label>
-        <label><input type="checkbox" class="conformidade" value="NAO_CONFORME"> NÃO CONFORME</label>
+        <label><input type="checkbox" class="conformidade" value="conforme"> CONFORME</label>
+        <label><input type="checkbox" class="conformidade" value="naoConforme"> NÃO CONFORME</label>
 
         <button onclick="loadData()">Filtrar</button>
     </div>
@@ -188,7 +188,7 @@
 
     <script>
 
-        function getSelectedStatuses() {
+        function getSelectedmodalidade() {
             return Array.from(document.querySelectorAll('.status:checked')).map(cb => cb.value);
         }
         function getSelectedConformidades() {
@@ -203,40 +203,58 @@
             return cca;
         }
 
-        async function loadData() {
-            const cca = getCCA();
-            const statuses = getSelectedStatuses();        // ["SBPE","MCMV"]
-            const conformidades = getSelectedConformidades(); // ["CONFORME","NAO_CONFORME"]
+async function loadData() {
 
-            const payload = { cca, statuses, conformidades };
-            console.log('JSON enviado para /api/get_data2:', payload);
+    const cca = getCCA();
 
-            try {
-                const res = await fetch('/api/get_data2', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+    const modalidade = getSelectedmodalidade();
 
-                const data = await res.json();
-                renderTable(data);
-            } catch (err) {
-                console.error('Erro ao buscar dados:', err);
-            }
-        }
+    const conformidades = getSelectedConformidades();
+
+    const payload = {
+        cca,
+        modalidade,
+        conformidade: conformidades
+    };
+
+    console.log('JSON enviado:', payload);
+
+    try {
+
+        const res = await fetch('/api/get_data2', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        console.log('Resposta API:', data);
+
+        renderTable(data);
+
+    } catch (err) {
+        console.error('Erro ao buscar dados:', err);
+    }
+}
 
 
 
-        function applyClientFilters(data, cca, statuses) {
+        function applyClientFilters(data, cca, modalidade) {
             let result = Array.isArray(data) ? data : [];
 
             // Filtra por modalidade (SBPE/MCMV)
-            if (statuses && statuses.length) {
-                result = result.filter(row => {
-                    const modalidade = String(row.MODALIDADE ?? '').toUpperCase();
-                    return statuses.some(s => modalidade.includes(s.toUpperCase()));
-                });
-            }
+if (modalidade && modalidade.length) {
+    result = result.filter(row => {
+        const rowModalidade = String(row.MODALIDADE ?? '').toUpperCase();
+
+        return modalidade.some(m =>
+            rowModalidade.includes(m.toUpperCase())
+        );
+    });
+}
 
             // Filtra por CCA (parcial)
             if (cca) {
@@ -292,17 +310,17 @@
 
 
             data.forEach(row => {
-                const valor = (row.VALOR_FINANCIADO ?? 0) / 100;
+                const valor = (row.valorFinanciado ?? 0) / 100;
                 total += valor;
                 const tr = `
             <tr>
-                <td>${formatDate(row.DATA_ENTRADA)}</td>
-                <td>${row.PROPONENTE ?? ''}</td>
-                <td>${formatCPF(row.CPF)}</td>
-                <td>${formatCCA(row.CCA)}</td>
-                <td>${formatNumContrato(row.NUM_CONTRATO)}</td>
-                <td>${row.MODALIDADE ?? ''}</td>
-                <td>${formatConformidade(row.CONFORMIDADE)}</td>
+                <td>${formatDate(row.dataEntrada)}</td>
+                <td>${row.proponente ?? ''}</td>
+                <td>${formatCPF(row.cpf)}</td>
+                <td>${formatCCA(row.cca)}</td>
+                <td>${formatNumContrato(row.numContrato)}</td>
+                <td>${row.modalidade ?? ''}</td>
+                <td>${formatConformidade(row.conformidade)}</td>
                 <td>R$ ${valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
             </tr>`;
                 tbody.innerHTML += tr;

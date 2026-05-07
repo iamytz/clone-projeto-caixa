@@ -1,6 +1,7 @@
 package com.clonecaixa.controllers.apis;
 
 import com.clonecaixa.dtos.*;
+import com.clonecaixa.entitys.Cca;
 import com.clonecaixa.entitys.ClientesHab;
 import com.clonecaixa.services.CcaService;
 import com.clonecaixa.services.ClientesHabService;
@@ -45,9 +46,30 @@ public class ClientesHabApi {
     public boolean verifyCca(@PathVariable String cca) {
         return ccaService.verifyCca(cca);
     }
-
     @PostMapping("/get_data2")
-    public List<ClientesHab> returnEsteira(@RequestBody FiltroEsteiraHabRecord dto) {
-        return service.filtroEsteirahab(dto);
+    public List<EsteiraHabRecord> esteiraHab(@RequestBody FiltroEsteiraHabRecord dto) {
+        return service.filtroEsteira(dto);
     }
+    @PostMapping("/post/cca")
+    public Cca salvarCca(@RequestBody CcaSaveRecord dto) {
+        return ccaService.salvarCca(dto);
+    }
+    @GetMapping("/get/cca")
+    public List<Cca> todosCca() {
+        return ccaService.listarTodosCca();
+
+    }
+    @GetMapping("/get/cca/{id}")
+    public Cca findById(@PathVariable int id) {
+        return ccaService.findById(id);
+    }
+    @PutMapping("/put/cca/{id}")
+    public Cca salvarPorId(@PathVariable int id, @RequestBody CcaSaveRecord dto) {
+        return ccaService.saveById(id,dto);
+    }
+    @DeleteMapping("/delete/cca/{id}")
+    public void deleteById(@PathVariable int id) {
+        ccaService.deleteById(id);
+    }
+
 }

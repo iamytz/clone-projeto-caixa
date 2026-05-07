@@ -1,6 +1,7 @@
 package com.clonecaixa.repositorys;
 
 
+import com.clonecaixa.dtos.FiltroEsteiraHabRecord;
 import com.clonecaixa.entitys.ClientesHab;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -44,23 +45,15 @@ public interface ClientesHabRepository extends JpaRepository <ClientesHab, Long>
             @Param("devSem") boolean devSem
     );
 
-
     @Query("""
-    SELECT m 
-    FROM ClientesHab m 
-    WHERE (:cca IS NULL OR m.cca = :cca)
-      AND (:existsStatus = true OR UPPER(m.status) IN :statuses)
-      AND (:existsConformidade = true OR UPPER(m.conformidade) IN :conformidade)
-    ORDER BY m.cca
+SELECT m 
+FROM ClientesHab m 
+WHERE m.cca LIKE CONCAT('%',:cca,'%')
+AND LOWER(m.modalidade) LIKE LOWER(CONCAT('%',:modalidade,'%'))
+AND m.conformidade IN (:conformidades)
+AND m.status IN ('negociado','em_negociacao')
 """)
-    List<ClientesHab> buscarFiltroEsteira(
-            @Param("cca") String cca,
-            @Param("existsStatus") boolean existsStatus,
-            @Param("statuses") List<String> statuses,
-            @Param("existsConformidade") boolean existsConformidade,
-            @Param("conformidade") List<String> listaConformidade
-    );
-
+    List<ClientesHab> buscaFiltroEsteira(@Param("cca")String cca,@Param("modalidade")String modalidade,@Param("conformidades")List<String>conformidades);
 
 
 }

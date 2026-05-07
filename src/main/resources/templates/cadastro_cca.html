@@ -220,7 +220,7 @@
     </header>
 
 
-    <form id="meuFormulario" action="/api/create/cca" method="POST">
+    <form id="meuFormulario" action="/api/post/cca" method="POST">
         <label>Correspondente:</label>
         <input type="text" name="correspondente" required>
 
@@ -332,13 +332,13 @@
       
             // Payload do jeito que seu backend espera (request.json)
             const payload = {
-              CORRESPONDENTE: correspondente,
-              CCA: cca,
-              CONTATO: contato,
-              NUMERO_CONTATO: numero
+              correspondente: correspondente,
+              cca: cca,
+              principalContato: contato,
+              numero: numero
             };
       
-            const resp = await fetch('/api/create/cca', {
+            const resp = await fetch('/api/post/cca', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(payload)

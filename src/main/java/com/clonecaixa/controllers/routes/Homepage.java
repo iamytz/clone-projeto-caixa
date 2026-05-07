@@ -43,5 +43,9 @@ public class Homepage {
     public String esteiraHab() {
         return "esteira_hab";
     }
+    @GetMapping("/editar_cca")
+    public String editarCca() {
+        return "editar_cca";
+    }
 
 }

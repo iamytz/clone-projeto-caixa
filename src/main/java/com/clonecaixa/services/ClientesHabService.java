@@ -5,6 +5,7 @@ import com.clonecaixa.entitys.ClientesHab;
 import com.clonecaixa.repositorys.ClientesHabRepository;
 import org.springframework.stereotype.Service;
 
+import java.io.PipedOutputStream;
 import java.util.List;
 import java.util.Locale;
 
@@ -109,23 +110,29 @@ public class ClientesHabService {
         return repository.buscarPorFiltro(dto.startDate(),dto.endDate(),listaStatus,statusesExists,listaContas,contasExists,devCom,devSem);
     }
 
+    public List<EsteiraHabRecord> filtroEsteira(FiltroEsteiraHabRecord dto) {
+        //mapeando atributos
+        String cca = dto.cca();
+        List<String>modalidades = dto.modalidade();
+        String modalidade;
+        List<String>conformidades = dto.conformidade();
 
-    public List<ClientesHab> filtroEsteirahab(FiltroEsteiraHabRecord dto) {
-        List<String> listaStatus = dto.statuses();
-        List<String> listaConformidade = dto.conformidade();
-
-        boolean existsStatus = listaStatus.isEmpty();
-        boolean existsConformidade = listaConformidade.isEmpty();
-
-        if (existsStatus) {
-            listaStatus = List.of("_sem_filtr_status");
-        }
-        if (existsConformidade) {
-            listaConformidade = List.of("_sem_filtro_conformidade_");
+        if (modalidades.isEmpty() || modalidades.size()==2) {
+            modalidade = "";
+        } else {
+            modalidade = modalidades.getFirst();
         }
 
-        return repository.buscarFiltroEsteira(dto.cca(),existsStatus,listaStatus,existsConformidade,listaConformidade);
+        if (conformidades.isEmpty()) {
+            conformidades = List.of("conforme","naoConforme");
+        }
+
+        List<ClientesHab> clientes = repository.buscaFiltroEsteira(cca,modalidade,conformidades);
+
+        return clientes.stream().map(c-> new EsteiraHabRecord(c.getDataEntrada(),c.getProponente(),c.getCpf(),c.getCca(),c.getNumContrato(),c.getModalidade(),c.getConformidade(),c.getValorFinanciado())).toList();
+
     }
+
 
 
 

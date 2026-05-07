@@ -14,7 +14,7 @@ public class Cca {
     public int id;
 
     @Column(name = "cca")
-    public int cca;
+    public String cca;
 
     @Column(name = "correspondente")
     public String correspondente;
